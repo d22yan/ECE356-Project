@@ -6,23 +6,24 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-        <title>ece356</title>
-        <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <!-- Custom styles for this template -->
-        <link href="jumbotron.css" rel="stylesheet">
-    </head>
+<html ng-app="app">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <title>ECE356 Database Application</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="styles/bootstrap/bootstrap.min.css">
+    <!-- Custom styles for this template -->
+    <!-- <link rel="stylesheet" href="styles/custom.css" > -->
+    <script src="scripts/libraries/angularjs/angular.min.js"></script>
+    <script src="scripts/libraries/angularjs/ui-bootstrap-tpls-0.10.0.min.js"></script>
+  </head>
   <body>
-
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -32,7 +33,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">ECE356 Project</a>
+          <a class="navbar-brand" href="#">ECE356 Database Application</a>
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form" action="LoginServlet" method="post">
@@ -60,35 +61,24 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>description</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>description</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>description</p>
+        <div class="col-md-4" ng-repeat="heading in [1,2,3]">
+          <h2>Heading {{heading}}</h2>
+          <p>description {{heading}}</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
       </div>
 
       <hr>
 
-      <footer>
-        <p>&copy; asdf</p>
+      <footer ng-controller="DevelopersController">
+        <p>&copy;
+          <span ng-repeat="developer in developers">
+            <a href="#" tooltip="{{developer.id}}">{{developer.name}}</a>{{$last ? '' : ', '}}
+          </span>
+        </p>
       </footer>
     </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers.js"></script>
   </body>
 </html>
