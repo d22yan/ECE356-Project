@@ -1,10 +1,16 @@
 <%-- 
-    Document   : index
-    Created on : 10-Mar-2014, 9:28:16 PM
-    Author     : root
+    Document   : page-template
+    Created on : Mar 18, 2014, 1:48:02 PM
+    Author     : Lewis
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@tag description="Generic Page Template" pageEncoding="UTF-8"%>
+<%@taglib prefix="generic" tagdir="/WEB-INF/tags" %>
+<%-- The list of normal or fragment attributes can be specified here: --%>
+<%@attribute name="title" required="true"%>
+
+<%-- any content can be specified here e.g.: --%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,12 +20,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-        <title>ece356</title>
+        <title>ECE356 Project</title>
+        
         <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <!-- Custom styles for this template -->
-        <link href="jumbotron.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/resources/styles/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link href="${pageContext.request.contextPath}/resources/styles/custom.css" rel="stylesheet">
     </head>
   <body>
 
@@ -32,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">ECE356 Project</a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/">ECE356 Project</a>
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form" action="LoginServlet" method="post">
@@ -51,44 +57,25 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>header</h1>
-        <p>description</p>
-        <p><a class="btn btn-primary btn-lg" role="button">button &raquo;</a></p>
+        <h1>${title}</h1>
+        <p>Welcome!</p>
+        <p><a class="btn btn-primary btn-lg" role="button">Click Me &raquo;</a></p>
       </div>
     </div>
-
+    
     <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>description</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>description</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>description</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; asdf</p>
-      </footer>
+    <jsp:doBody/>
     </div> <!-- /container -->
 
-
+    <div id="footer" class="navbar navbar-fixed-bottom">
+        <div class="container">
+            <p id="copyright">&copy; asdf</p>
+        </div>
+    </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/scripts/bootstrap.min.js"></script>
   </body>
 </html>
