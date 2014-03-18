@@ -39,6 +39,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
+            
             User user = Database.Manager.getLogin(request.getParameter("username"), request.getParameter("password"));
             out.println(user.getGroupId());
         } catch (ClassNotFoundException ex) {
