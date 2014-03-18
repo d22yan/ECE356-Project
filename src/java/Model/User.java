@@ -13,13 +13,13 @@ package Model;
 public class User {
     private String userName;
     private String password;
-    private int groupId;
+    private String groupName;
     private int roleId;
     
-    public User(String userName, String password, int groupId, int roleId) {
+    public User(String userName, String password, String groupName, int roleId) {
         this.userName = userName;
         this.password = password;
-        this.groupId = groupId;
+        this.groupName = groupName;
         this.roleId = roleId;
     }
     
@@ -39,12 +39,12 @@ public class User {
         this.password = value;
     }
     
-    public int getGroupId() {
-        return this.groupId;
+    public String getGroupName() {
+        return this.groupName;
     }
     
-    public void getGroupId(int value) {
-        this.groupId = value;
+    public void getGroupName(String value) {
+        this.groupName = value;
     }
     
     public int getRoleId() {

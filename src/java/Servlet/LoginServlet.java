@@ -39,11 +39,17 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            
             User user = Database.Manager.getLogin(request.getParameter("username"), request.getParameter("password"));
-            out.println(user.getGroupId());
+            
+            if (user == null) 
+                throw new ClassNotFoundException();
+            
+            request.getSession().setAttribute("user", user);
+            response.sendRedirect(user.getGroupName()); //redirect to group page
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.getSession().setAttribute("user", null);
+            response.sendRedirect(""); //redirect to root
         } catch (SQLException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
