@@ -1,5 +1,5 @@
 <%-- 
-    Document   : doctors
+    Document   : doctor
     Created on : Mar 17, 2014, 6:26:07 PM
     Author     : Lewis
 --%>

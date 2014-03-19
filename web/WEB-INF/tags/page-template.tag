@@ -5,7 +5,8 @@
 --%>
 
 <%@tag description="Generic Page Template" pageEncoding="UTF-8"%>
-<%@taglib prefix="generic" tagdir="/WEB-INF/tags" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="generic" tagdir="/WEB-INF/tags"%>
 <%-- The list of normal or fragment attributes can be specified here: --%>
 <%@attribute name="title" required="true"%>
 
@@ -41,14 +42,16 @@
             <a class="navbar-brand" href="${pageContext.request.contextPath}/">ECE356 Project</a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form" action="${pageContext.request.contextPath}/LoginServlet" method="post">
-            <div class="form-group">
-              <input name="username" type="text" placeholder="username" class="form-control">
-            </div>
-            <div class="form-group">
-              <input name="password" type="password" placeholder="password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
+          <form class="navbar-form navbar-right" role="form" action="${pageContext.request.contextPath}/${user != null ? "LogoutServlet": "LoginServlet"}" method="post">
+              <c:if test="${user == null}">
+                <div class="form-group">
+                  <input name="username" type="text" placeholder="username" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input name="password" type="password" placeholder="password" class="form-control">
+                </div>
+              </c:if>
+              <button type="submit" class="btn btn-success">${user != null ? "Sign out" : "Sign in"}</button>
           </form>
         </div><!--/.navbar-collapse -->
       </div>
@@ -58,8 +61,10 @@
     <div class="jumbotron">
       <div class="container">
         <h1>${title}</h1>
-        <p>Welcome!</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Click Me &raquo;</a></p>
+        <p>Welcome${user != null ? " " : ""}${user != null ? user.getUserName() : ""}!</p>
+        <c:if test="${user != null}">
+            <p><a href="${pageContext.request.contextPath}/${user.getGroupName()}" class="btn btn-primary btn-lg" role="button">Return to ${user.getGroupName()} &raquo;</a></p>
+        </c:if>
       </div>
     </div>
     

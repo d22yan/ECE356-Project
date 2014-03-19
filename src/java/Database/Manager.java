@@ -48,26 +48,22 @@ public class Manager {
         try {
             conection = getConnection();
             statement = conection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
+            ResultSet userSet = statement.executeQuery(
                 "SELECT * " + 
                 "FROM user_account " + 
                 "WHERE username = '" + username + "' AND password = '" + password + "';"
             );
-            String asdf = null;
-            String asdf2 = null;
-            int groupId = 0;
-            int roleId = 0;
-            if (resultSet.first()) {
-                asdf = resultSet.getString("username");
-                asdf2 = resultSet.getString("password");
-                groupId = resultSet.getInt("group_id");
-                roleId = resultSet.getInt("role_id");
+            
+            if (!userSet.first())
+            {
+                throw new ClassNotFoundException();
             }
+
             return new User(
-                    asdf,
-                    asdf2,
-                    groupId,
-                    roleId
+                    userSet.getString("username"),
+                    userSet.getString("password"),
+                    userSet.getString("group_name"),
+                    userSet.getInt("role_id")
             );
         } finally {
             if (statement != null) {
