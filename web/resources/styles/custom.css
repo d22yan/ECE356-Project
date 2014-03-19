@@ -12,6 +12,10 @@ and open the template in the editor.
     background-color: #F5F5F5;
 }
 
-#copyright {
+#credits {
     margin: 20px 0;
+}
+
+.capitalize {
+    text-transform: capitalize;
 }
