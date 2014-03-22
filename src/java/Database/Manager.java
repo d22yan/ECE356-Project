@@ -48,14 +48,9 @@ public class Manager {
         try {
             conection = getConnection();
             statement = conection.createStatement();
-            ResultSet userSet = statement.executeQuery(
-                "SELECT * " + 
-                "FROM user_account " + 
-                "WHERE username = '" + username + "' AND password = '" + password + "';"
-            );
+            ResultSet userSet = statement.executeQuery(Database.Query.Login(username, password));
             
-            if (!userSet.first())
-            {
+            if (!userSet.first()) {
                 throw new ClassNotFoundException();
             }
 
