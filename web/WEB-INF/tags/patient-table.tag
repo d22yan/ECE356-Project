@@ -8,20 +8,30 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="patient-table" %>
-<%@attribute name="group" required="true"%>
 <%
-    String doctorQuery = null;
     String defaultQuery = null;
+    String doctorQuery = null;
+    String staffQuery = null;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     if (request.getSession().getAttribute("user") != null) {
         Model.User user = (Model.User) request.getSession().getAttribute("user");
-        doctorQuery = Database.Query.PatientList(user.getRoleId());
-        defaultQuery = Database.Query.PatientList();
+        doctorQuery = Database.Query.DoctorPatientList(user.getRoleId());
+        staffQuery = Database.Query.StaffPatientList(user.getRoleId());
+        defaultQuery = Database.Query.DefaultPatientList();
     }
 %>
 
 <html>
     <c:if test='${user != null}'>
+        <style type="text/css">
+            .searchbar {
+                float:left;
+                margin-left: 10px; 
+            }
+            #patient-table > tbody[id^="patient-"] :hover {
+                background: #DDDDDD;
+            }
+        </style>
         <sql:setDataSource 
             var="connection" 
             driver="com.mysql.jdbc.Driver"
@@ -32,6 +42,11 @@
             <c:when test='${user.getGroupName() == "doctor"}'>
                 <sql:query dataSource="${connection}" var="patientList">
                     <%=doctorQuery%>
+                </sql:query>
+            </c:when>
+            <c:when test='${user.getGroupName() == "staff"}'>
+                <sql:query dataSource="${connection}" var="patientList">
+                    <%=staffQuery%>
                 </sql:query>
             </c:when>
             <c:otherwise>
@@ -46,13 +61,13 @@
             </div>
             <div id="search-option" class="searchbar">
                 <select>
-                    <option value="patient-id">patient_id</option>
-                    <option value="patient-name" selected="selected">patient_name</option>
-                    <option value="default-doctor-id">doctor_name</option>
-                    <option value="total-visit-count">total_visit_count</option><!--last visit date + more col-->
+                    <option value="patient-id">patient id</option>
+                    <option value="patient-name" selected="selected">patient name</option>
+                    <option value="default-doctor-name">default doctor name</option>
+                    <option value="last-visit-date">last visit date</option>
                 </select> 
             </div>
-            <c:if test='${user.getGroupName() == "doctor"}'>
+            <c:if test='${user.getGroupName() == "doctor" || user.getGroupName() == "staff"}'>
                 <a id="view-all" class="btn btn-default searchbar" href="#" role="button">
                     all patient
                 </a>
@@ -64,25 +79,28 @@
         <table id="patient-table" class="table">
             <thead>
                 <tr>
-                    <th>patient number</th>
                     <th>patient</th>
+                    <th>patient #</th>
                     <th>default doctor</th>
                     <th>last visit date</th>
                 </tr>
             </thead>
             <c:forEach var="row" items="${patientList.rows}">
-                <tbody id="patient-${row.patient_id}" patientId="${row.patient_id}" isCurrentPatient="${row.doctor_id == user.getRoleId() ? 1 : 0}">
-                    <td id="patient-id-${row.patient_id}">
-                        <c:out value="${row.patient_id}"/>
-                    </td>
-                    <td id="patient-name-${row.patient_name}">
+                <tbody 
+                    id="patient-${row.patient_id}" 
+                    patientId="${row.patient_id}" 
+                    isCurrentPatient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? 1 : 0}">
+                    <td class="patient-name">
                         <c:out value="${row.patient_name}"/>
                     </td>
-                    <td id="default-doctor-id-${row.doctor_name}">
+                    <td class="patient-id">
+                        <c:out value="${row.patient_id}"/>
+                    </td>
+                    <td class="default-doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
-                    <td id="total-visit-count-${row.total_visit_count}">
-                        <c:out value="${row.total_visit_count}"/>
+                    <td class="default-doctor-name">
+                        <c:out value="${row.last_visit_date}"/>
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
@@ -94,16 +112,7 @@
                 </tbody>
             </c:forEach>
         </table>
-        <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
-            #patient-table > tbody[id^="patient-"] :hover {
-                background: #DDDDDD;
-            }
-        </style>
-        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script> 
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
         <script>
             var isCurrentPatient = false;
             $(document).ready(function() {
@@ -143,7 +152,7 @@
                     var searchInput = $('#search-input').val().replace(/\s/g, '');
                     var option = $('#search-option').find(':selected').val();
                     $('#patient-table > tbody').each(function() {
-                        if ($(this).find('[id^="' + option + '"]').text().replace().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {
+                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {
                             $(this).hide();
                         } else {
                             $(this).show();

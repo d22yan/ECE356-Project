@@ -9,18 +9,6 @@
 
 <generic:page-template title="Doctor">
     <jsp:body>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Patient #</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Phone Number</th>
-                </tr>
-            </thead>
-            <tbody>
-            <!-- populate data -->
-            </tbody>
-        </table>
+        <generic:patient-table></generic:patient-table>
     </jsp:body>
 </generic:page-template>
