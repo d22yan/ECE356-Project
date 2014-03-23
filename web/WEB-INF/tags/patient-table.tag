@@ -60,7 +60,7 @@
                 <input id="search-input" class="form-control" type="search" placeholder="search"></input>
             </div>
             <div id="search-option" class="searchbar">
-                <select>
+                <select class="form-control">
                     <option value="patient-id">patient id</option>
                     <option value="patient-name" selected="selected">patient name</option>
                     <option value="default-doctor-name">default doctor name</option>
