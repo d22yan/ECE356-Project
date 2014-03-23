@@ -9,5 +9,6 @@
 
 <generic:page-template title="Staff">
     <jsp:body>
+        <generic:patient-table></generic:patient-table>
     </jsp:body>
 </generic:page-template>

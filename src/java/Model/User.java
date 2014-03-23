@@ -43,7 +43,7 @@ public class User {
         return this.groupName;
     }
     
-    public void getGroupName(String value) {
+    public void setGroupName(String value) {
         this.groupName = value;
     }
     
