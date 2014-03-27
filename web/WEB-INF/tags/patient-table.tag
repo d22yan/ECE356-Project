@@ -30,6 +30,7 @@
             }
             #patient-table > tbody[id^="patient-"] :hover {
                 background: #DDDDDD;
+                cursor: pointer;
             }
         </style>
         <sql:setDataSource 
@@ -56,8 +57,11 @@
             </c:otherwise>
         </c:choose>
         <div style="margin-bottom: 50px">
-            <div class="searchbar" style="width:200px">
+            <div id='datetimepicker' class="input-group date searchbar" style="width:200px">
                 <input id="search-input" class="form-control" type="search" placeholder="search"></input>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
             </div>
             <div id="search-option" class="searchbar">
                 <select class="form-control">
@@ -99,7 +103,7 @@
                     <td class="default-doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
-                    <td class="default-doctor-name">
+                    <td class="last-visit-date">
                         <c:out value="${row.last_visit_date}"/>
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
@@ -112,9 +116,11 @@
                 </tbody>
             </c:forEach>
         </table>
-        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-        <script>
+        <script type="text/javascript">
             var isCurrentPatient = false;
+            $('#datetimepicker').datetimepicker({
+                pickTime: false
+            });
             $(document).ready(function() {
                 $('[id^="edit"]').on('click', function(e){
                     e.stopPropagation();
@@ -127,6 +133,10 @@
                     searchFilter();
                 });
                 $('#search-input').keyup(function(e) {
+                    searchFilter();
+                });
+                $("#datetimepicker").on("change", function(e) {
+                    $('#search-option option[value="last-visit-date"]').prop('selected', true);
                     searchFilter();
                 });
                 $('#view-all').on('click', function() {

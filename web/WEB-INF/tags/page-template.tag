@@ -22,8 +22,11 @@
         <title>ECE356 Project</title>
         
         <link href="${pageContext.request.contextPath}/resources/styles/bootstrap.min.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/resources/styles/bootstrap-datetimepicker.min.css" rel="stylesheet">
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/scripts/bootstrap.min.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/scripts/moment-2.5.1.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/scripts/bootstrap-datetimepicker.min.js"></script>
         
         <!-- Custom resources -->
         <link href="${pageContext.request.contextPath}/resources/styles/custom.css" rel="stylesheet">
