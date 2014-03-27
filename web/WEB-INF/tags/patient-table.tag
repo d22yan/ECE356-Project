@@ -122,30 +122,30 @@
                 pickTime: false
             });
             $(document).ready(function() {
-                $('[id^="edit"]').on('click', function(e){
+                $('[id^="edit"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
                 });
-                $('#patient-table > tbody[id^="patient-"]').on('click', function(e){
+                $('#patient-table > tbody[id^="patient-"]').click(function(e){
                     alert("<!--TODO direct to visit record page-->");
                 });
                 $('#search-option').change(function() {
                     searchFilter();
                 });
-                $('#search-input').keyup(function(e) {
+                $('#search-input').on('input', function(e) {
                     searchFilter();
                 });
-                $("#datetimepicker").on("change", function(e) {
+                $('#datetimepicker').change(function(e) {
                     $('#search-option option[value="last-visit-date"]').prop('selected', true);
                     searchFilter();
                 });
-                $('#view-all').on('click', function() {
+                $('#view-all').click(function() {
                     isCurrentPatient = false;
                     toggleCurrentPatient(true);
-                    $("#patient-table").children("tbody").show();
+                    $('#patient-table').children('tbody').show();
                     searchFilter();
                 });
-                $('#view-current').on('click', function() {
+                $('#view-current').click(function() {
                     isCurrentPatient = true;
                     toggleCurrentPatient(false);
                     $('#patient-table > tbody').each(function() {
