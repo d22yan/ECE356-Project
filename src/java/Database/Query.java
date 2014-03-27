@@ -28,7 +28,7 @@ public class Query {
                 "patient.patient_id,  " +
                 "patient.patient_name,  " +
                 "doctor.doctor_name, " +
-                    "patient_record_last_visit_date.last_visit_date " +
+                    "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date " +
             "FROM  " +
                 "doctor,  " +
                 "patient  " +
@@ -53,7 +53,7 @@ public class Query {
                 "patient.patient_id,  "+
                 "patient.patient_name,  "+
                 "doctor.doctor_name, "+
-                    "patient_record_last_visit_date.last_visit_date, "+
+                    "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date, "+
                 "assigned_patient.doctor_id  "+
             "FROM  "+
                 "doctor,  "+
@@ -84,7 +84,7 @@ public class Query {
                 "patient.patient_id,  " +
                 "patient.patient_name,  " +
                 "doctor.doctor_name, " +
-                "patient_record_last_visit_date.last_visit_date, " +
+                "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date, " +
                 "assigned_staff_to_assigned_patient.staff_id " +
             "FROM  " +
                 "doctor,  " +
