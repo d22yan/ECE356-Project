@@ -59,9 +59,9 @@
         <form class="form-inline" style="margin-bottom: 50px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
-                    <option value="patient-name" selected="selected" data-type="text">patient name</option>
-                    <option value="patient-id" data-type="number">patient id</option>
-                    <option value="default-doctor-name" data-type="text">default doctor name</option>
+                    <option value="patient-name" selected="selected" data-type="string">patient name</option>
+                    <option value="patient-id" data-type="int">patient id</option>
+                    <option value="assigned-doctor-name" data-type="string">assigned doctor name</option>
                     <option value="last-visit-date" data-type="date">last visit date</option>
                 </select> 
             </div>
@@ -97,7 +97,7 @@
                 <tr>
                     <th>patient</th>
                     <th>patient #</th>
-                    <th>default doctor</th>
+                    <th>assigned doctor</th>
                     <th>last visit date</th>
                 </tr>
             </thead>
@@ -113,7 +113,7 @@
                     <td class="patient-id">
                         <c:out value="${row.patient_id}"/>
                     </td>
-                    <td class="default-doctor-name">
+                    <td class="assigned-doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
                     <td class="last-visit-date">
@@ -134,6 +134,7 @@
             var isCurrentPatient = false;
             $(document).ready(function() {
                 $('#search-range .input-group').datetimepicker({ pickTime: false });
+                
                 $('[id^="edit"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
@@ -142,7 +143,7 @@
                     alert("<!--TODO direct to visit record page-->");
                 });
                 $('#search-option').change(function() {
-                    if ($(this).find(':selected').data('type') == 'text') {
+                    if ($(this).find(':selected').data('type') == 'string') {
                         $('#search-single').show();
                         $('#search-range').hide();
                         $('#search-single .form-control').val('');
@@ -157,21 +158,37 @@
                 $('#search-input').on('input', function(e) {
                     searchFilter();
                 });
+                $('#search-range .form-control').on('input', function(e) {
+                    searchRangeFilter();
+                });
+                $('#search-range .date').on('dp.change', function(e) {
+                    searchRangeFilter();
+                });
                 $('#view-all').click(function() {
                     isCurrentPatient = false;
                     toggleCurrentPatient(true);
-                    $('#patient-table').children('tbody').show();
-                    searchFilter();
+                    $('#patient-table tbody tr').show();
+                    
+                    if ($('#search-option').find(':selected').data('type') == 'string') {
+                        searchFilter();
+                    } else {
+                        searchRangeFilter();
+                    }
                 });
                 $('#view-current').click(function() {
                     isCurrentPatient = true;
                     toggleCurrentPatient(false);
-                    $('#patient-table > tbody').each(function() {
-                        if ($(this).attr('isCurrentPatient') == 0) {
+                    $('#patient-table tbody tr').each(function() {
+                        if (!$(this).data('isCurrentPatient')) {
                             $(this).hide();
                         }
                     });
-                    searchFilter();
+                    
+                    if ($('#search-option').find(':selected').data('type') == 'string') {
+                        searchFilter();
+                    } else {
+                        searchRangeFilter();
+                    }
                 });
                 function clearSearchFilter() {
                     $('#search-input').val('');
@@ -187,10 +204,37 @@
                         }
                     });
                 }
+                
                 function searchRangeFilter() {
-                    var searchMin = $('#search-min').val().replace(/\s/g, '');
-                    var searchMax = $('#search-max').val().replace(/\s/g, '');
+                    var valueType = $('#search-option').find(':selected').data('type');
                     var option = $('#search-option').find(':selected').val();
+                    
+                    var searchMin, searchMax, parseValue;
+                    switch (valueType) {
+                        case "int": 
+                            searchMin = parseInt($('#search-min').val().replace(/\s/g, ''));
+                            searchMax = parseInt($('#search-max').val().replace(/\s/g, ''));
+                            parseValue = function(value) { 
+                                return !isNaN(parseInt(value)) ? parseInt(value) : null; 
+                            };
+                            break;
+                        case "date":
+                            searchMin = moment($('#search-min').val().replace(/\s/g, ''));
+                            searchMax = moment($('#search-max').val().replace(/\s/g, ''));
+                            parseValue = function(value) {
+                                return moment(value).isValid() ? moment(value) : null;
+                            };
+                            break;
+                    }
+                        
+                    $('#patient-table tbody tr').each(function() {
+                        var testValue = parseValue($(this).find('[class^="' + option + '"]').text().replace(/\s/g, ''));
+                        if (testValue == null || testValue < searchMin || testValue > searchMax || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
                 }
                 function toggleCurrentPatient(showCurrentButton) {
                     if (showCurrentButton) {
