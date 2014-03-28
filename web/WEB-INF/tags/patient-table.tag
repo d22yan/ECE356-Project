@@ -61,7 +61,7 @@
                 <select class="form-control">
                     <option value="patient-name" selected="selected" data-type="string">patient name</option>
                     <option value="patient-id" data-type="int">patient id</option>
-                    <option value="assigned-doctor-name" data-type="string">assigned doctor name</option>
+                    <option value="default-doctor-name" data-type="string">default doctor name</option>
                     <option value="last-visit-date" data-type="date">last visit date</option>
                 </select> 
             </div>
@@ -97,7 +97,7 @@
                 <tr>
                     <th>patient</th>
                     <th>patient #</th>
-                    <th>assigned doctor</th>
+                    <th>default doctor</th>
                     <th>last visit date</th>
                 </tr>
             </thead>
@@ -113,7 +113,7 @@
                     <td class="patient-id">
                         <c:out value="${row.patient_id}"/>
                     </td>
-                    <td class="assigned-doctor-name">
+                    <td class="default-doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
                     <td class="last-visit-date">
