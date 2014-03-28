@@ -56,30 +56,42 @@
                 </sql:query>
             </c:otherwise>
         </c:choose>
-        <div style="margin-bottom: 50px">
-            <div id='datetimepicker' class="input-group date searchbar" style="width:200px">
-                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
+        <form class="form-inline" style="margin-bottom: 50px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
-                    <option value="patient-id">patient id</option>
-                    <option value="patient-name" selected="selected">patient name</option>
-                    <option value="default-doctor-name">default doctor name</option>
-                    <option value="last-visit-date">last visit date</option>
+                    <option value="patient-name" selected="selected" data-type="string">patient name</option>
+                    <option value="patient-id" data-type="int">patient id</option>
+                    <option value="default-doctor-name" data-type="string">default doctor name</option>
+                    <option value="last-visit-date" data-type="date">last visit date</option>
                 </select> 
             </div>
+            <div id="search-single" class="searchbar" style="width:200px">
+                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
+            </div>
+            <div id="search-range" class="form-inline searchbar" style="width:500px" hidden>
+                <div class="input-group date" style="float:left;padding-right:5px; width:200px">
+                    <input id="search-min" class="form-control" type="search" placeholder="min"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="input-group date" style="width:200px">
+                    <input id="search-max" class="form-control" type="search" placeholder="max"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
             <c:if test='${user.getGroupName() == "doctor" || user.getGroupName() == "staff"}'>
-                <a id="view-all" class="btn btn-default searchbar" href="#" role="button">
+                <a id="view-all" class="btn btn-default searchbar pull-right" href="#" role="button">
                     all patient
                 </a>
-                <a id="view-current" class="btn btn-default searchbar" href="#" role="button">
+                <a id="view-current" class="btn btn-default searchbar pull-right" href="#" role="button">
                     current patient
                 </a>
             </c:if>
-        </div>
+        </form>
         <table id="patient-table" class="table">
             <thead>
                 <tr>
@@ -89,11 +101,12 @@
                     <th>last visit date</th>
                 </tr>
             </thead>
+            <tbody>
             <c:forEach var="row" items="${patientList.rows}">
-                <tbody 
+                <tr 
                     id="patient-${row.patient_id}" 
-                    patientId="${row.patient_id}" 
-                    isCurrentPatient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? 1 : 0}">
+                    data-patient-id="${row.patient_id}" 
+                    data-is-current-patient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? true : false}">
                     <td class="patient-name">
                         <c:out value="${row.patient_name}"/>
                     </td>
@@ -108,52 +121,74 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-${row.patient_id}" patientId="${row.patient_id}" href="#">
+                            <a id="edit-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
                                 edit
                             </a>
                         </td>
                     </c:if>
-                </tbody>
+                </tr>
             </c:forEach>
+            </tbody>
         </table>
         <script type="text/javascript">
             var isCurrentPatient = false;
-            $('#datetimepicker').datetimepicker({
-                pickTime: false
-            });
             $(document).ready(function() {
-                $('[id^="edit"]').on('click', function(e){
+                $('#search-range .input-group').datetimepicker({ pickTime: false });
+                
+                $('[id^="edit"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
                 });
-                $('#patient-table > tbody[id^="patient-"]').on('click', function(e){
+                $('#patient-table > tbody[id^="patient-"]').click(function(e){
                     alert("<!--TODO direct to visit record page-->");
                 });
                 $('#search-option').change(function() {
+                    if ($(this).find(':selected').data('type') == 'string') {
+                        $('#search-single').show();
+                        $('#search-range').hide();
+                        $('#search-single .form-control').val('');
+                        searchFilter();
+                    } else {
+                        $('#search-single').hide();
+                        $('#search-range').show();
+                        $('#search-range .form-control').val('');
+                        searchRangeFilter();
+                    }
+                });
+                $('#search-input').on('input', function(e) {
                     searchFilter();
                 });
-                $('#search-input').keyup(function(e) {
-                    searchFilter();
+                $('#search-range .form-control').on('input', function(e) {
+                    searchRangeFilter();
                 });
-                $("#datetimepicker").on("change", function(e) {
-                    $('#search-option option[value="last-visit-date"]').prop('selected', true);
-                    searchFilter();
+                $('#search-range .date').on('dp.change', function(e) {
+                    searchRangeFilter();
                 });
-                $('#view-all').on('click', function() {
+                $('#view-all').click(function() {
                     isCurrentPatient = false;
                     toggleCurrentPatient(true);
-                    $("#patient-table").children("tbody").show();
-                    searchFilter();
+                    $('#patient-table tbody tr').show();
+                    
+                    if ($('#search-option').find(':selected').data('type') == 'string') {
+                        searchFilter();
+                    } else {
+                        searchRangeFilter();
+                    }
                 });
-                $('#view-current').on('click', function() {
+                $('#view-current').click(function() {
                     isCurrentPatient = true;
                     toggleCurrentPatient(false);
-                    $('#patient-table > tbody').each(function() {
-                        if ($(this).attr('isCurrentPatient') == 0) {
+                    $('#patient-table tbody tr').each(function() {
+                        if (!$(this).data('isCurrentPatient')) {
                             $(this).hide();
                         }
                     });
-                    searchFilter();
+                    
+                    if ($('#search-option').find(':selected').data('type') == 'string') {
+                        searchFilter();
+                    } else {
+                        searchRangeFilter();
+                    }
                 });
                 function clearSearchFilter() {
                     $('#search-input').val('');
@@ -161,8 +196,40 @@
                 function searchFilter() {
                     var searchInput = $('#search-input').val().replace(/\s/g, '');
                     var option = $('#search-option').find(':selected').val();
-                    $('#patient-table > tbody').each(function() {
-                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {
+                    $('#patient-table tbody tr').each(function() {
+                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                }
+                
+                function searchRangeFilter() {
+                    var valueType = $('#search-option').find(':selected').data('type');
+                    var option = $('#search-option').find(':selected').val();
+                    
+                    var searchMin, searchMax, parseValue;
+                    switch (valueType) {
+                        case "int": 
+                            searchMin = parseInt($('#search-min').val().replace(/\s/g, ''));
+                            searchMax = parseInt($('#search-max').val().replace(/\s/g, ''));
+                            parseValue = function(value) { 
+                                return !isNaN(parseInt(value)) ? parseInt(value) : null; 
+                            };
+                            break;
+                        case "date":
+                            searchMin = moment($('#search-min').val().replace(/\s/g, ''));
+                            searchMax = moment($('#search-max').val().replace(/\s/g, ''));
+                            parseValue = function(value) {
+                                return moment(value).isValid() ? moment(value) : null;
+                            };
+                            break;
+                    }
+                        
+                    $('#patient-table tbody tr').each(function() {
+                        var testValue = parseValue($(this).find('[class^="' + option + '"]').text().replace(/\s/g, ''));
+                        if (testValue == null || testValue < searchMin || testValue > searchMax || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
                             $(this).hide();
                         } else {
                             $(this).show();
