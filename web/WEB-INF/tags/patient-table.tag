@@ -4,10 +4,13 @@
     Author     : root
 --%>
 
+<%@tag import="java.util.Arrays"%>
 <%@tag description="Patient Table" pageEncoding="UTF-8"%>
+<%@tag import="java.util.List,java.util.ArrayList"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="generic" %>
+
 
 <%
     String query = null;    
@@ -19,6 +22,13 @@
         query = Database.Query.DoctorPatientList(user.getRoleId());
     else 
         query = Database.Query.DefaultPatientList();
+    
+    List<Model.Column> columns = Arrays.asList(
+        new Model.Column("patient-name", "Patient Name", "string", true),
+        new Model.Column("patient-id", "Patient ID", "int", false),
+        new Model.Column("default-doctor-name", "Default Doctor", "string", false),
+        new Model.Column("last-visit-date", "Last Visit", "date", false)
+    );
 %>
 
-<generic:table-template query="<%=query%>"></generic:table-template>
+<generic:table-template query="<%=query%>" columns="<%=columns%>"></generic:table-template>

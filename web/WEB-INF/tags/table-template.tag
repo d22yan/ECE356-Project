@@ -5,11 +5,13 @@
 --%>
 
 <%@tag description="Generic Table Template" pageEncoding="UTF-8"%>
+<%@tag import="java.util.List,java.util.ArrayList"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="generic"%>
 
 <%@attribute name="query" required="true"%>
+<%@attribute name="columns" required="true" type="List<Model.Column>"%>
 <%
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
 %>
@@ -37,10 +39,9 @@
     <form class="form-inline" style="margin-bottom: 50px">
         <div id="search-option" class="searchbar">
             <select class="form-control">
-                <option value="patient-name" selected="selected" data-type="string">patient name</option>
-                <option value="patient-id" data-type="int">patient id</option>
-                <option value="default-doctor-name" data-type="string">default doctor name</option>
-                <option value="last-visit-date" data-type="date">last visit date</option>
+                <c:forEach var="column" items="${columns}">
+                    <option value="${column.getId()}" data-type="${column.getType()}" ${column.isDefault() ? "selected" : ""}>${column.getLabel()}</option>
+                </c:forEach>
             </select> 
         </div>
         <div id="search-single" class="searchbar" style="width:200px">
@@ -73,10 +74,9 @@
     <table id="patient-table" class="table">
         <thead>
             <tr>
-                <th>patient</th>
-                <th>patient #</th>
-                <th>default doctor</th>
-                <th>last visit date</th>
+                <c:forEach var="column" items="${columns}">
+                    <th>${column.getLabel()}</th>
+                </c:forEach>
             </tr>
         </thead>
         <tbody>

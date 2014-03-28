@@ -5,5 +5,5 @@
  */
 
 $(document).ready(function(){
-    $(".dev-name").tooltip();
+    $('.dev-name').tooltip();
 });
