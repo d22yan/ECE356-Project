@@ -13,17 +13,12 @@
     String query = null;    
     Model.User user = (Model.User) request.getSession().getAttribute("user");
     
-    switch (user.getGroupName()) {
-        case "doctor": 
-            query = Database.Query.DoctorPatientList(user.getRoleId());
-            break;
-        case "staff":
-            query = Database.Query.StaffPatientList(user.getRoleId());
-            break;
-        default:
-            query = Database.Query.DefaultPatientList();
-            break;
-    }
+    if (user.getGroupName() == "doctor") 
+        query = Database.Query.DoctorPatientList(user.getRoleId());
+    else if (user.getGroupName() == "staff") 
+        query = Database.Query.DoctorPatientList(user.getRoleId());
+    else 
+        query = Database.Query.DefaultPatientList();
 %>
 
 <generic:table-template query="<%=query%>"></generic:table-template>
