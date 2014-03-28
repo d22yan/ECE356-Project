@@ -101,11 +101,12 @@
                     <th>last visit date</th>
                 </tr>
             </thead>
+            <tbody>
             <c:forEach var="row" items="${patientList.rows}">
-                <tbody 
+                <tr 
                     id="patient-${row.patient_id}" 
-                    patientId="${row.patient_id}" 
-                    isCurrentPatient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? 1 : 0}">
+                    data-patient-id="${row.patient_id}" 
+                    data-is-current-patient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? true : false}">
                     <td class="patient-name">
                         <c:out value="${row.patient_name}"/>
                     </td>
@@ -120,13 +121,14 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-${row.patient_id}" patientId="${row.patient_id}" href="#">
+                            <a id="edit-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
                                 edit
                             </a>
                         </td>
                     </c:if>
-                </tbody>
+                </tr>
             </c:forEach>
+            </tbody>
         </table>
         <script type="text/javascript">
             var isCurrentPatient = false;
@@ -177,8 +179,8 @@
                 function searchFilter() {
                     var searchInput = $('#search-input').val().replace(/\s/g, '');
                     var option = $('#search-option').find(':selected').val();
-                    $('#patient-table > tbody').each(function() {
-                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {
+                    $('#patient-table tbody tr').each(function() {
+                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
                             $(this).hide();
                         } else {
                             $(this).show();
@@ -186,7 +188,9 @@
                     });
                 }
                 function searchRangeFilter() {
-                    
+                    var searchMin = $('#search-min').val().replace(/\s/g, '');
+                    var searchMax = $('#search-max').val().replace(/\s/g, '');
+                    var option = $('#search-option').find(':selected').val();
                 }
                 function toggleCurrentPatient(showCurrentButton) {
                     if (showCurrentButton) {
