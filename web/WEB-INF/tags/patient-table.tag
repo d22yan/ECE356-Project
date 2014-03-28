@@ -56,30 +56,42 @@
                 </sql:query>
             </c:otherwise>
         </c:choose>
-        <div style="margin-bottom: 50px">
-            <div id='datetimepicker' class="input-group date searchbar" style="width:200px">
-                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
+        <form class="form-inline" style="margin-bottom: 50px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
-                    <option value="patient-id">patient id</option>
-                    <option value="patient-name" selected="selected">patient name</option>
-                    <option value="default-doctor-name">default doctor name</option>
-                    <option value="last-visit-date">last visit date</option>
+                    <option value="patient-name" selected="selected" data-type="text">patient name</option>
+                    <option value="patient-id" data-type="number">patient id</option>
+                    <option value="default-doctor-name" data-type="text">default doctor name</option>
+                    <option value="last-visit-date" data-type="date">last visit date</option>
                 </select> 
             </div>
+            <div id="search-single" class="searchbar" style="width:200px">
+                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
+            </div>
+            <div id="search-range" class="form-inline searchbar" style="width:500px" hidden>
+                <div class="input-group date" style="float:left;padding-right:5px; width:200px">
+                    <input id="search-min" class="form-control" type="search" placeholder="min"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="input-group date" style="width:200px">
+                    <input id="search-max" class="form-control" type="search" placeholder="max"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
             <c:if test='${user.getGroupName() == "doctor" || user.getGroupName() == "staff"}'>
-                <a id="view-all" class="btn btn-default searchbar" href="#" role="button">
+                <a id="view-all" class="btn btn-default searchbar pull-right" href="#" role="button">
                     all patient
                 </a>
-                <a id="view-current" class="btn btn-default searchbar" href="#" role="button">
+                <a id="view-current" class="btn btn-default searchbar pull-right" href="#" role="button">
                     current patient
                 </a>
             </c:if>
-        </div>
+        </form>
         <table id="patient-table" class="table">
             <thead>
                 <tr>
@@ -118,10 +130,8 @@
         </table>
         <script type="text/javascript">
             var isCurrentPatient = false;
-            $('#datetimepicker').datetimepicker({
-                pickTime: false
-            });
             $(document).ready(function() {
+                $('#search-range .input-group').datetimepicker({ pickTime: false });
                 $('[id^="edit"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
@@ -130,13 +140,19 @@
                     alert("<!--TODO direct to visit record page-->");
                 });
                 $('#search-option').change(function() {
-                    searchFilter();
+                    if ($(this).find(':selected').data('type') == 'text') {
+                        $('#search-single').show();
+                        $('#search-range').hide();
+                        $('#search-single .form-control').val('');
+                        searchFilter();
+                    } else {
+                        $('#search-single').hide();
+                        $('#search-range').show();
+                        $('#search-range .form-control').val('');
+                        searchRangeFilter();
+                    }
                 });
                 $('#search-input').on('input', function(e) {
-                    searchFilter();
-                });
-                $('#datetimepicker').change(function(e) {
-                    $('#search-option option[value="last-visit-date"]').prop('selected', true);
                     searchFilter();
                 });
                 $('#view-all').click(function() {
@@ -168,6 +184,9 @@
                             $(this).show();
                         }
                     });
+                }
+                function searchRangeFilter() {
+                    
                 }
                 function toggleCurrentPatient(showCurrentButton) {
                     if (showCurrentButton) {
