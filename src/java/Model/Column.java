@@ -12,13 +12,15 @@ package Model;
  */
 
 public class Column {
-    private String id;    
-    private String label;
-    private String type;
-    private boolean isDefault;
+    private String id; //sql column id used to access value from sql result
+    private String value; //value used to identify select options in filter
+    private String label; //actual text displayed in table header and search options
+    private String type; //used to perform typed comparisons on column values for filtering
+    private boolean isDefault; //used to determine which search option is initially selected
     
-    public Column(String id, String label, String type, boolean isDefault) {
+    public Column(String id, String value, String label, String type, boolean isDefault) {
         this.id = id;
+        this.value = value;
         this.label = label;
         this.type = type;
         this.isDefault = isDefault;
@@ -30,6 +32,14 @@ public class Column {
 
     public void setId(String id) {
         this.id = id;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getLabel() {
@@ -48,7 +58,7 @@ public class Column {
         this.type = type;
     }
 
-    public boolean isDefault() {
+    public boolean isIsDefault() {
         return isDefault;
     }
 

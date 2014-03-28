@@ -40,7 +40,7 @@
         <div id="search-option" class="searchbar">
             <select class="form-control">
                 <c:forEach var="column" items="${columns}">
-                    <option value="${column.getId()}" data-type="${column.getType()}" ${column.isDefault() ? "selected" : ""}>${column.getLabel()}</option>
+                    <option value="${column.value}" data-type="${column.type}" ${column.isDefault ? "selected" : ""}>${column.label}</option>
                 </c:forEach>
             </select> 
         </div>
@@ -85,18 +85,11 @@
                 id="patient-${row.patient_id}" 
                 data-patient-id="${row.patient_id}" 
                 data-is-current-patient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? true : false}">
-                <td class="patient-name">
-                    <c:out value="${row.patient_name}"/>
-                </td>
-                <td class="patient-id">
-                    <c:out value="${row.patient_id}"/>
-                </td>
-                <td class="default-doctor-name">
-                    <c:out value="${row.doctor_name}"/>
-                </td>
-                <td class="last-visit-date">
-                    <c:out value="${row.last_visit_date}"/>
-                </td>
+                <c:forEach var="column" items="${columns}">
+                    <td class="${column.value}">
+                        <c:out value="${row[column.id]}"/>
+                    </td>
+                </c:forEach>
                 <c:if test='${user.getGroupName() == "staff"}'>
                     <td>
                         <a id="edit-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">

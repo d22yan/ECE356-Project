@@ -24,10 +24,10 @@
         query = Database.Query.DefaultPatientList();
     
     List<Model.Column> columns = Arrays.asList(
-        new Model.Column("patient-name", "Patient Name", "string", true),
-        new Model.Column("patient-id", "Patient ID", "int", false),
-        new Model.Column("default-doctor-name", "Default Doctor", "string", false),
-        new Model.Column("last-visit-date", "Last Visit", "date", false)
+        new Model.Column("patient_name", "patient-name", "Patient Name", "string", true),
+        new Model.Column("patient_id", "patient-id", "Patient ID", "int", false),
+        new Model.Column("doctor_name", "default-doctor-name", "Default Doctor", "string", false),
+        new Model.Column("last_visit_date", "last-visit-date", "Last Visit", "date", false)
     );
 %>
 
