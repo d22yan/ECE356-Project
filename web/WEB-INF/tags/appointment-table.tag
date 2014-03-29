@@ -50,7 +50,7 @@
                 </sql:query>
             </c:when>
         </c:choose>
-        <table id="patient-table" class="table">
+        <table id="appointment-table" class="table">
             <thead>
                 <tr>
                     <th>appointment id</th>
