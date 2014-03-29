@@ -11,6 +11,6 @@
 
 <generic:page-template title="Patient">
     <jsp:body>   
-         <generic:patient_profile></generic:patient_profile>
+         <generic:patient-profile></generic:patient-profile>
     </jsp:body>
 </generic:page-template>

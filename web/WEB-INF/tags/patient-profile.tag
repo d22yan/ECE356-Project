@@ -7,7 +7,7 @@
 <%@tag description="Patient profile" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
-<%@taglib tagdir="/WEB-INF/tags" prefix="patient_profile" %>
+<%@taglib tagdir="/WEB-INF/tags" prefix="patient-profile" %>
 
 <%
     String patientProfileQuery = null;
@@ -44,20 +44,20 @@
                 </td>
                 <td class="text-right col-md-2"><p class="text-primary">Edit</p></td>               
             </tr>  
-            <tr class="edit_name table-row bg-warning" style="display:none;">
+            <tr class="edit-name table-row bg-warning" style="display:none;">
                 <td  class="col-md-5" >
                     <form class="form-inline" role="form">
                     <div class="form-group">       
-                        <label class="text-primary small" for="first_name">First Name </label> 
-                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
+                        <label class="text-primary small" for="first-name">First Name </label> 
+                        <input type="text" class="form-control" id="first-name" name="first-name" placeholder="First Name">
                     </div>
                     </form>
                 </td>
                 <td class="col-md-5">
                     <form class="form-inline" role="form">
                     <div class="form-group">           
-                        <label class="text-primary small" for="last_name">Last Name </label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
+                        <label class="text-primary small" for="last-name">Last Name </label>
+                        <input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last Name">
                     </div>
                     </form> 
                 </td>
@@ -70,7 +70,7 @@
                 <td>********</td>
                 <td class="text-right"><p class="text-primary">Edit</p></td>
             </tr>
-            <tr class="edit_password table-row bg-warning" style="display:none;">
+            <tr class="edit-password table-row bg-warning" style="display:none;">
                 <td  class="col-md-5" >
                     <form class="form-inline" role="form">
                     <div class="form-group">       
@@ -94,7 +94,7 @@
                 </td>
                 <td class="text-right"><p class="text-primary">Edit</p></td>
             </tr>
-            <tr class="edit_address table-row bg-warning" style="display:none;">
+            <tr class="edit-address table-row bg-warning" style="display:none;">
                 <td  class="col-md-5" >
                     <form class="form-inline" role="form">
                     <div class="form-group">       
@@ -118,7 +118,7 @@
                 </td>
                 <td class="text-right"><p class="text-primary">Edit</p></td>
             </tr>
-            <tr class="edit_phoneNumber table-row bg-warning" style="display:none;">
+            <tr class="edit-phoneNumber table-row bg-warning" style="display:none;">
                 <td  class="col-md-5" >
                     <form class="form-inline" role="form">
                     <div class="form-group">       
@@ -142,7 +142,7 @@
                 </td>
                 <td class="text-right"><p class="text-primary">Edit</p></td>
             </tr>
-            <tr class="edit_healthCard table-row bg-warning" style="display:none;">
+            <tr class="edit-healthCard table-row bg-warning" style="display:none;">
                 <td  class="col-md-5" >
                     <form class="form-inline" role="form">
                     <div class="form-group">       
@@ -166,7 +166,7 @@
                 </td>
                 <td class="text-right"><p class="text-primary">Edit</p></td>
             </tr> 
-            <tr class="edit_SIN table-row bg-warning" style="display:none;">
+            <tr class="edit-SIN table-row bg-warning" style="display:none;">
                 <td  class="col-md-5" >
                     <form class="form-inline" role="form">
                     <div class="form-group">       
@@ -201,45 +201,45 @@
 <script>
     $(function(){
        $("#editName").click(function(){
-                if(!$("#first_name").is(':visible')) {
-                    $("#first_name").val('');
-                    $("#last_name").val('');                
+                if(!$("#first-name").is(':visible')) {
+                    $("#first-name").val('');
+                    $("#last-name").val('');                
                 }
-                    $('.edit_name').animate({height: "toggle", opacity:"toggle" }, 'medium');
+                    $('.edit-name').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
         
         $("#editPassword").click(function(){
             if(!$("#password").is(':visible')) {
                 $("#password").val('');               
             }
-            $('.edit_password').animate({height: "toggle", opacity:"toggle" }, 'medium');
+            $('.edit-password').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
         
         $("#editAddress").click(function(){
             if(!$("#address").is(':visible')) {
                 $("#address").val('');               
             }
-            $('.edit_address').animate({height: "toggle", opacity:"toggle" }, 'medium');
+            $('.edit-address').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
         
         $("#editPhoneNumber").click(function(){
             if(!$("#phone_number").is(':visible')) {
                 $("#phone_number").val('');               
             }
-            $('.edit_phoneNumber').animate({height: "toggle", opacity:"toggle" }, 'medium');
+            $('.edit-phoneNumber').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
         
         $("#editHealthCard").click(function(){
             if(!$("#health_card").is(':visible')) {
                 $("#health_card").val('');               
             }
-            $('.edit_healthCard').animate({height: "toggle", opacity:"toggle" }, 'medium');
+            $('.edit-healthCard').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
         $("#editSINCard").click(function(){
             if(!$("#SIN").is(':visible')) {
                 $("#SIN").val('');               
             }
-            $('.edit_SIN').animate({height: "toggle", opacity:"toggle" }, 'medium');
+            $('.edit-SIN').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
 
     });
@@ -360,17 +360,17 @@
     }
 
     function updateName() {
-        if ($('#first_name').val().length > 0 && $('#last_name').val().length > 0) {           
-                $('#first_name').parent().prev().css('color', 'black');
-                $('#first_name').css('border-color', '#ccc');
-                $('#last_name').parent().prev().css('color', 'black');
-                $('#last_name').css('border-color', '#ccc');
+        if ($('#first-name').val().length > 0 && $('#last-name').val().length > 0) {           
+                $('#first-name').parent().prev().css('color', 'black');
+                $('#first-name').css('border-color', '#ccc');
+                $('#last-name').parent().prev().css('color', 'black');
+                $('#last-name').css('border-color', '#ccc');
                 $.ajax({
                     type: "POST",
                     url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                     data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_NAME%>,
                             tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
-                            updateValue:$('#first_name').val() +" "+ $('#last_name').val()},
+                            updateValue:$('#first-name').val() +" "+ $('#last-name').val()},
                     success : function(data){
                         location.reload(true);
                     },
@@ -380,20 +380,20 @@
                   });
 
         } else {
-                if ($('#first_name').val().length < 1) {
-                        $('#first_name').parent().prev().css('color', 'red');
-                        $('#first_name').css('border-color', 'red');
+                if ($('#first-name').val().length < 1) {
+                        $('#first-name').parent().prev().css('color', 'red');
+                        $('#first-name').css('border-color', 'red');
                 } else {
-                        $('#first_name').parent().prev().css('color', 'black');
-                        $('#first_name').css('border-color', '#ccc');
+                        $('#first-name').parent().prev().css('color', 'black');
+                        $('#first-name').css('border-color', '#ccc');
                 }
 
-                if ($('#last_name').val().length < 1) {
-                        $('#last_name').parent().prev().css('color', 'red');
-                        $('#last_name').css('border-color', 'red');
+                if ($('#last-name').val().length < 1) {
+                        $('#last-name').parent().prev().css('color', 'red');
+                        $('#last-name').css('border-color', 'red');
                 } else {
-                        $('#last_name').parent().prev().css('color', 'black');
-                        $('#last_name').css('border-color', '#ccc');
+                        $('#last-name').parent().prev().css('color', 'black');
+                        $('#last-name').css('border-color', '#ccc');
                 }
         }	
     }
