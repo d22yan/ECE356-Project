@@ -4,10 +4,13 @@
     Author     : Lewis
 --%>
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="generic" tagdir="/WEB-INF/tags" %>
 
+
 <generic:page-template title="Patient">
-    <jsp:body>
+    <jsp:body>   
+         <generic:patient-profile></generic:patient-profile>
     </jsp:body>
 </generic:page-template>
