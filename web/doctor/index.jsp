@@ -9,6 +9,7 @@
 
 <generic:page-template title="Doctor">
     <jsp:body>
+        <generic:appointment-table></generic:appointment-table>
         <generic:patient-table></generic:patient-table>
     </jsp:body>
 </generic:page-template>

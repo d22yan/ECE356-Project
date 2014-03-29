@@ -15,7 +15,7 @@
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     if (request.getSession().getAttribute("user") != null) {
         Model.User user = (Model.User) request.getSession().getAttribute("user");
-//        doctorQuery = Database.Query.DoctorPatientList(user.getRoleId());
+        doctorQuery = Database.Query.doctorAppointmentList(user.getRoleId());
         staffQuery = Database.Query.staffAppointmentList(user.getRoleId());
 //        defaultQuery = Database.Query.staffappointmentList(user.getRoleId());
     }
@@ -40,20 +40,15 @@
             password="<%=Database.ServiceConstant.pwd%>"/>
         <c:choose>
             <c:when test='${user.getGroupName() == "staff"}'>
-                <sql:query dataSource="${connection}" var="patientList">
+                <sql:query dataSource="${connection}" var="appointmentList">
                     <%=staffQuery%>
                 </sql:query>
             </c:when>
             <c:when test='${user.getGroupName() == "doctor"}'>
-                <sql:query dataSource="${connection}" var="patientList">
-                    <%=defaultQuery%>
+                <sql:query dataSource="${connection}" var="appointmentList">
+                    <%=doctorQuery%>
                 </sql:query>
             </c:when>
-            <c:otherwise>
-                <sql:query dataSource="${connection}" var="patientList">
-                    <%=defaultQuery%>
-                </sql:query>
-            </c:otherwise>
         </c:choose>
         <table id="patient-table" class="table">
             <thead>
@@ -65,7 +60,7 @@
                     <th>end time</th>
                 </tr>
             </thead>
-            <c:forEach var="row" items="${patientList.rows}">
+            <c:forEach var="row" items="${appointmentList.rows}">
                 <tbody>
                     <td class="appointment-id">
                         <c:out value="${row.appointment_id}"/>
