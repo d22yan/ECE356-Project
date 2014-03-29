@@ -54,8 +54,8 @@
             <thead>
                 <tr>
                     <th>appointment id</th>
-                    <th>doctor id</th>
-                    <th>patient id</th>
+                    <th>doctor name</th>
+                    <th>patient name</th>
                     <th>start time</th>
                     <th>end time</th>
                 </tr>
@@ -79,14 +79,21 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-<!--                            <a id="edit-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
-                                edit
-                            </a>-->
-                            what is this?
+                            <a id="edit-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
+                                what is this?
+                            </a>
                         </td>
                     </c:if>
                 </tbody>
             </c:forEach>
         </table>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('[id^="edit"]').click(function(e){
+                    e.stopPropagation();
+                    alert("<!--TODO direct to appointment page-->");
+                });
+            });
+        </script>
     </c:if>
 </html>
