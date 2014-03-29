@@ -9,15 +9,17 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="patient-table" %>
 <%
-    String defaultQuery = null;
-    String doctorQuery = null;
-    String staffQuery = null;
+    String patientQuery = null;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     if (request.getSession().getAttribute("user") != null) {
         Model.User user = (Model.User) request.getSession().getAttribute("user");
-        doctorQuery = Database.Query.DoctorPatientList(user.getRoleId());
-        staffQuery = Database.Query.StaffPatientList(user.getRoleId());
-        defaultQuery = Database.Query.DefaultPatientList();
+        if (user.getGroupName().equals("doctor")) {
+            patientQuery = Database.Query.DoctorPatientList(user.getRoleId());
+        } else if (user.getGroupName().equals("staff")) {
+            patientQuery = Database.Query.StaffPatientList(user.getRoleId());
+        } else {
+            patientQuery = Database.Query.DefaultPatientList();
+        }
     }
 %>
 
@@ -39,23 +41,9 @@
             url="<%=dataSourceUrl%>"
             user="<%=Database.ServiceConstant.user%>"  
             password="<%=Database.ServiceConstant.pwd%>"/>
-        <c:choose>
-            <c:when test='${user.getGroupName() == "doctor"}'>
-                <sql:query dataSource="${connection}" var="patientList">
-                    <%=doctorQuery%>
-                </sql:query>
-            </c:when>
-            <c:when test='${user.getGroupName() == "staff"}'>
-                <sql:query dataSource="${connection}" var="patientList">
-                    <%=staffQuery%>
-                </sql:query>
-            </c:when>
-            <c:otherwise>
-                <sql:query dataSource="${connection}" var="patientList">
-                    <%=defaultQuery%>
-                </sql:query>
-            </c:otherwise>
-        </c:choose>
+        <sql:query dataSource="${connection}" var="patientList">
+            <%=patientQuery%>
+        </sql:query>
         <form class="form-inline" style="margin-bottom: 50px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
