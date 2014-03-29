@@ -89,7 +89,6 @@
         </table>
         <script type="text/javascript">
             $(document).ready(function() {
-                    e.stopPropagation();
                 $('[id^="edit-appointment"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to appointment page-->");
