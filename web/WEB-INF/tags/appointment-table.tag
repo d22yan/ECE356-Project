@@ -79,7 +79,7 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
+                            <a id="edit-appointment-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
                                 what is this?
                             </a>
                         </td>
@@ -89,7 +89,8 @@
         </table>
         <script type="text/javascript">
             $(document).ready(function() {
-                $('[id^="edit"]').click(function(e){
+                    e.stopPropagation();
+                $('[id^="edit-appointment"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to appointment page-->");
                 });

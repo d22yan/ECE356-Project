@@ -121,7 +121,7 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
+                            <a id="edit-patient-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
                                 edit
                             </a>
                         </td>
@@ -135,7 +135,7 @@
             $(document).ready(function() {
                 $('#search-range .input-group').datetimepicker({ pickTime: false });
                 
-                $('[id^="edit"]').click(function(e){
+                $('[id^="edit-patient"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
                 });
