@@ -30,10 +30,6 @@
                 float:left;
                 margin-left: 10px; 
             }
-            #patient-table > tbody[id^="patient-"] :hover {
-                background: #DDDDDD;
-                cursor: pointer;
-            }
         </style>
         <sql:setDataSource 
             var="connection" 
@@ -127,9 +123,18 @@
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
                 });
-                $('#patient-table > tbody[id^="patient-"]').click(function(e){
-                    alert("<!--TODO direct to visit record page-->");
+                $('#patient-table > tbody > tr[id^="patient-"]').click(function(e){
+                    var win = window.open('${pageContext.request.contextPath}/patientRecord.jsp?patientId=' + $(this).data('patient-id'), '_blank');
                 });
+
+                $('#patient-table > tbody > tr').hover(function() {
+                    $(this).css("cursor", "pointer");
+                    $(this).css("background", "#DDDDDD");
+                }, function() {
+                    $(this).css("cursor", "default");
+                    $(this).css("background", "");
+                });
+
                 $('#search-option').change(function() {
                     if ($(this).find(':selected').data('type') == 'string') {
                         $('#search-single').show();

@@ -301,4 +301,29 @@ public class Query {
                 "assigned_staff.staff_id = staff.staff_id AND  " +
                 "staff.staff_id = " + staffId + " ;";
     }
+
+    public static String PatientRecord(int patientId) {
+        return
+            "SELECT  " +
+                "patient.patient_name,  " +
+                "doctor.doctor_name,  " +
+                "patient_record.patient_record_id,  " +
+                "patient_record.doctor_id,  " +
+                "patient_record.patient_id,  " +
+                "date_format(date(patient_record.visit_start_time), '%m/%d/%Y') as patient_record_date,  " +
+                "patient_record.visit_start_time, " +
+                "patient_record.visit_end_time, " +
+                "patient_record.diagnosis,  " +
+                "patient_record.prescription,  " +
+                "patient_record.treatment_schedule,  " +
+                "patient_record.freeform  " +
+            "FROM  " +
+                "doctor,  " +
+                "patient,  " +
+                "patient_record " +
+            "WHERE  " +
+                "doctor.doctor_id = patient_record.doctor_id AND  " +
+                "patient.patient_id = patient_record.patient_id AND  " +
+                "patient_record.patient_id = " + patientId + "; ";
+    }
 }
