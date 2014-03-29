@@ -7,6 +7,8 @@
 package Database;
 import Model.User;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author root
@@ -68,5 +70,66 @@ public class Manager {
                 conection.close();
             }
         }
+    }
+     
+    public static void addPatientRecord(int doctorId, int patientId, String visitStartTime, String visitEndTime, String diagnosis, String prescription, String treatmentSchedule, String freeform)
+            throws ClassNotFoundException, SQLException {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate(
+                Database.Query.AddPatientRecord(
+                    doctorId, 
+                    patientId, 
+                    visitStartTime, 
+                    visitEndTime, 
+                    diagnosis, 
+                    prescription, 
+                    treatmentSchedule, 
+                    freeform
+                )
+            );
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conection != null) {
+                conection.close();
+            }
+        }
+    }
+
+    public static int selectLastPatientRecordId() {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet patientRecordSet = statement.executeQuery("SELECT * FROM patient_record ORDER BY patient_record_id DESC LIMIT 1");
+            if (!patientRecordSet.first()) {
+                throw new ClassNotFoundException();
+            }
+            return patientRecordSet.getInt("patient_record_id");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return 0;
     }
 }
