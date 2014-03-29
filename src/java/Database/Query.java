@@ -119,4 +119,46 @@ public class Query {
             "WHERE  " +
                 "patient.default_doctor_id = doctor.doctor_id; ";
     }
+    public static String staffAppointmentList(int staffId) {
+        return
+            "SELECT " +
+                "appointment.appointment_id, " +
+                "appointment.doctor_id, " +
+                "appointment.patient_id, " +
+                "appointment.appointment_start_time, " +
+                "appointment.appointment_end_time, " +
+                "test.doctor_name, " +
+                "test2.patient_name " +
+            "FROM " +
+                "ece356db_d22yan.appointment " +
+            "LEFT JOIN " + 
+                "( SELECT " +
+                    "* " +
+                "FROM " +
+                    "ece356db_d22yan.doctor ) " +
+            "AS " + 
+                "test " + 
+            "ON " +
+                "appointment.doctor_id = test.doctor_id " +
+            "LEFT JOIN " +
+                "( SELECT " +
+                    "* " +
+                "FROM " +
+                    "ece356db_d22yan.patient ) " +
+            "AS " +
+                "test2 " +
+            "ON " +
+                "appointment.patient_id = test2.patient_id " +
+            "RIGHT JOIN " +
+                "(SELECT " +
+                    "* " +
+                "FROM " +
+                    "ece356db_d22yan.assigned_staff " +
+                "WHERE " +
+                    "assigned_staff.staff_id = " + staffId + ") " +
+            "AS " +
+                "test3 " +
+            "ON " +
+                "appointment.doctor_id = test3.doctor_id;";
+    }
 }
