@@ -40,7 +40,7 @@
         <sql:query dataSource="${connection}" var="patientList">
             <%=patientQuery%>
         </sql:query>
-        <form class="form-inline" style="margin-bottom: 50px">
+        <form class="form-inline clearfix" style="padding: 10px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
                     <option value="patient-name" selected="selected" data-type="string">patient name</option>
