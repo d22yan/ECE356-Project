@@ -219,6 +219,27 @@ public class Query {
             "ON " +
                 "appointment.patient_id = test2.patient_id ";
     }
+    
+    public static String staffDoctorList(int staffId)
+    {
+        return
+            "SELECT " +
+                "doctor.doctor_id, " +
+                "doctor.doctor_name " +
+            "FROM " +
+                "ece356db_d22yan.doctor " +
+            "RIGHT JOIN " +
+            "(SELECT " +
+                "* " +
+            "FROM " +
+                "ece356db_d22yan.assigned_staff " +
+            "WHERE " +
+                "assigned_staff.staff_id = " + staffId + ") " +
+            "AS " +
+                "test " +
+            "ON " +
+                "doctor.doctor_id = test.doctor_id;";
+    }
 
     public static String DoctorPatientRecord(int doctorId, int patientId) {
         return

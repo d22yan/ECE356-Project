@@ -28,7 +28,7 @@
                 float:left;
                 margin-left: 10px; 
             }
-            #patient-table > tbody[id^="patient-"] :hover {
+            #appointment-table > tbody[id^="patient-"] :hover {
                 background: #DDDDDD;
             }
         </style>
@@ -90,7 +90,6 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $('[id^="edit-appointment"]').click(function(e){
-                    e.stopPropagation();
                     alert("<!--TODO direct to appointment page-->");
                 });
             });
