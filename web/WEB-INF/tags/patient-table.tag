@@ -116,13 +116,19 @@
         </table>
         <script type="text/javascript">
             var isCurrentPatient = false;
+
             $(document).ready(function() {
+                clearSearchFilter();
+                toggleCurrentPatient(true);
+                $('#search-option option[value="patient-record-id"]').prop('selected', true);
+
                 $('#search-range .input-group').datetimepicker({ pickTime: false });
                 
                 $('[id^="edit-patient"]').click(function(e){
                     e.stopPropagation();
                     alert("<!--TODO direct to patient page-->");
                 });
+
                 $('#patient-table > tbody > tr[id^="patient-"]').click(function(e){
                     var win = window.open('${pageContext.request.contextPath}/patientRecord.jsp?patientId=' + $(this).data('patient-id'), '_blank');
                 });
@@ -148,15 +154,19 @@
                         searchRangeFilter();
                     }
                 });
+
                 $('#search-input').on('input', function(e) {
                     searchFilter();
                 });
+
                 $('#search-range .form-control').on('input', function(e) {
                     searchRangeFilter();
                 });
+
                 $('#search-range .date').on('dp.change', function(e) {
                     searchRangeFilter();
                 });
+
                 $('#view-all').click(function() {
                     isCurrentPatient = false;
                     toggleCurrentPatient(true);
@@ -168,6 +178,7 @@
                         searchRangeFilter();
                     }
                 });
+
                 $('#view-current').click(function() {
                     isCurrentPatient = true;
                     toggleCurrentPatient(false);
@@ -183,14 +194,17 @@
                         searchRangeFilter();
                     }
                 });
+
                 function clearSearchFilter() {
                     $('#search-input').val('');
+                    $('#search-range #searchMin, #search-range #searchMax').val('');
                 }
+
                 function searchFilter() {
                     var searchInput = $('#search-input').val().replace(/\s/g, '');
                     var option = $('#search-option').find(':selected').val();
                     $('#patient-table tbody tr').each(function() {
-                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
+                        if ($(this).find('[class^="' + option + '"]').text().toLowerCase().replace(/\s/g, '').indexOf(searchInput) == -1 || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
                             $(this).hide();
                         } else {
                             $(this).show();
@@ -238,8 +252,6 @@
                         $('#view-current').hide();
                     }
                 }
-                clearSearchFilter();
-                toggleCurrentPatient(true);
             });
         </script>
     </c:if>

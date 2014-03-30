@@ -100,11 +100,22 @@
                     <option data-type="string" value="freeform">freeform</option>
                 </select> 
             </div>
-            <div id='patient-record-datetimepicker' class="input-group date searchbar" style="width:200px">
+            <div id="patient-record-search-single" class="searchbar" style="width:200px" hidden>
                 <input id="patient-record-search-input" class="form-control" type="search" placeholder="search"></input>
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
+            </div>
+            <div id="patient-record-search-range" class="form-inline searchbar" style="width:500px">
+                <div class="input-group date" style="float:left;padding-right:5px; width:200px">
+                    <input id="search-min" class="form-control" type="search" placeholder="min"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="input-group date" style="width:200px">
+                    <input id="search-max" class="form-control" type="search" placeholder="max"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
         </div>
         <table id="patient-record-table" class="table">
@@ -127,6 +138,18 @@
                         </td>
                         <td class="doctor-name">
                             <c:out value="${row.doctor_name}"/>
+                        </td>
+                        <td class="diagnosis" hidden>
+                            <c:out value="${row.diagnosis}"/>
+                        </td>
+                        <td class="treatment-schedule" hidden>
+                            <c:out value="${row.treatment_schedule}"/>
+                        </td>
+                        <td class="prescription" hidden>
+                            <c:out value="${row.prescription}"/>
+                        </td>
+                        <td class="freeform" hidden>
+                            <c:out value="${row.freeform}"/>
                         </td>
                     </tr>
                     <tr id="data-patient-record-${row.patient_record_id}" style="display: none;">
@@ -218,10 +241,32 @@
                 document.getElementById("patient-record-table").style.display = "none";
             }    
             $(document).ready(function() {
+                clearPatientRecordSearchFilter();
+                $('#patient-record-search-option option[value="patient-record-id"]').prop('selected', true);
+
                 $('.datePicker').datetimepicker({});
 
-                $('#patient-record-datetimepicker').datetimepicker({
+                $('#patient-record-search-range .input-group').datetimepicker({ 
                     pickTime: false
+                });
+
+                $(document).on({
+                    mouseenter: function () {
+                        $(this).css("cursor", "pointer");
+                        $(this).css("background", "#DDDDDD");
+                    },
+                    mouseleave: function () {
+                        $(this).css("cursor", "default");
+                        $(this).css("background", "");
+                    }
+                },'#patient-record-table > tbody > tr[id^="patient-record"], #patient-record-table > tbody > tr[id^="add-patient-record"]' );
+
+                $(document).on('click', '#patient-record-table > tbody > tr[id^="patient-record"]', function() {
+                    $('#patient-record-table > tbody > tr#data-patient-record-' + $(this).attr('patientRecordId')).toggle();
+                });
+
+                $('#patient-record-table > tbody > tr#add-patient-record').click(function() {
+                    $('#patient-record-table > tbody > tr#data-add-patient-record').toggle();
                 });
 
                 $('#patient-record-table #data-input-submit').click(function() {
@@ -295,6 +340,7 @@
                                         '</td>' +
                                     '</tr>'
                                 ).insertBefore('#patient-record-table > tbody > #add-patient-record');
+                                patientRecordSearchRangeFilter();
                             },
                             error: function(req, status, error) {
                                alert(status);
@@ -305,53 +351,40 @@
                     }
                 });
 
-                $(document).on({
-                    mouseenter: function () {
-                        $(this).css("cursor", "pointer");
-                        $(this).css("background", "#DDDDDD");
-                    },
-                    mouseleave: function () {
-                        $(this).css("cursor", "default");
-                        $(this).css("background", "");
-                    }
-                },'#patient-record-table > tbody > tr[id^="patient-record"], #patient-record-table > tbody > tr[id^="add-patient-record"]' );
-
-                $(document).on('click', '#patient-record-table > tbody > tr[id^="patient-record"]', function() {
-                    $('#patient-record-table > tbody > tr#data-patient-record-' + $(this).attr('patientRecordId')).toggle();
-                });
-
-                $('#patient-record-table > tbody > tr#add-patient-record').click(function() {
-                    $('#patient-record-table > tbody > tr#data-add-patient-record').toggle();
-                });
-
                 $('#patient-record-search-option').change(function() {
-                    patientRecordSearchFilter();
+                    if ($(this).find(':selected').data('type') == 'string') {
+                        $('#patient-record-search-single').show();
+                        $('#patient-record-search-range').hide();
+                        $('#patient-record-search-single .form-control').val('');
+                        searchFilter();
+                    } else {
+                        $('#patient-record-search-single').hide();
+                        $('#patient-record-search-range').show();
+                        $('#patient-record-search-range .form-control').val('');
+                        searchRangeFilter();
+                    }
                 });
 
                 $('#patient-record-search-input').keyup(function(e) {
                     patientRecordSearchFilter();
                 });
 
-                $("#patient-record-datetimepicker").on("change", function(e) {
-                    var searchInput = $('#patient-record-search-input').val().replace(/\s/g, '');
-                    var regexPattern = /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/g;
-                    var result = searchInput.match(regexPattern);
-                    if (result != null) {
-                        $('#patient-record-search-option option[value="date"]').prop('selected', true);
-                        patientRecordSearchFilter();
-                    }
+
+                $('#patient-record-search-range .form-control').on('input', function(e) {
+                    patientRecordSearchRangeFilter();
                 });
 
-                function convertDateTimeToSqlFormat(dateTime) {
-                    return moment(dateTime).format('YYYY-MM-DD HH:MM:SSS');
-                }
-
-                function validateVisitTimes(startTime, endTime) {
-                    return moment(startTime) <= moment(endTime);
-                }
+                $('#patient-record-search-range .date').on('dp.change', function(e) {
+                    patientRecordSearchRangeFilter();
+                });
 
                 function clearPatientRecordSearchFilter() {
                     $('#patient-record-search-input').val('');
+                    $('#patient-record-search-range #searchMin, #patient-record-search-range #searchMax').val('');
+                }
+
+                function convertDateTimeToSqlFormat(dateTime) {
+                    return moment(dateTime).format('YYYY-MM-DD HH:MM:SSS');
                 }
 
                 function patientRecordSearchFilter() {
@@ -361,7 +394,7 @@
                     var searchInput = $('#patient-record-search-input').val().replace(/\s/g, '');
                     var option = $('#patient-record-search-option').find(':selected').val();
                     $('#patient-record-table > tbody > tr[id^="patient-record"]').each(function() {
-                        if ($(this).find('[class^="' + option + '"]').text().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {
+                        if ($(this).find('[class^="' + option + '"]').text().toLowerCase().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {
                             $(this).hide();
                         } else {
                             $(this).show();
@@ -369,7 +402,45 @@
                     });
                 }
 
-                clearPatientRecordSearchFilter();
+                function patientRecordSearchRangeFilter() {
+                    $('#patient-record-table tr[id^="data-patient-record"]').each(function() {
+                        $(this).hide();
+                    });
+
+                    var valueType = $('#patient-record-search-option').find(':selected').data('type');
+                    var option = $('#patient-record-search-option').find(':selected').val();
+                    
+                    var searchMin, searchMax, parseValue;
+                    switch (valueType) {
+                        case "int": 
+                            searchMin = parseInt($('#search-min').val().replace(/\s/g, ''));
+                            searchMax = parseInt($('#search-max').val().replace(/\s/g, ''));
+                            parseValue = function(value) { 
+                                return !isNaN(parseInt(value)) ? parseInt(value) : null; 
+                            };
+                            break;
+                        case "date":
+                            searchMin = moment($('#search-min').val().replace(/\s/g, ''));
+                            searchMax = moment($('#search-max').val().replace(/\s/g, ''));
+                            parseValue = function(value) {
+                                return moment(value).isValid() ? moment(value) : null;
+                            };
+                            break;
+                    }
+                        
+                    $('#patient-record-table tbody tr[id^="patient-record"]').each(function() {
+                        var testValue = parseValue($(this).find('[class^="' + option + '"]').text().replace(/\s/g, ''));
+                        if (testValue == null || testValue < searchMin || testValue > searchMax) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                }
+
+                function validateVisitTimes(startTime, endTime) {
+                    return moment(startTime) <= moment(endTime);
+                }
             });
         </script>
     </c:if>
