@@ -19,5 +19,10 @@
                 <generic:patient-table></generic:patient-table>
             </jsp:body>
         </generic:tab-template>
+        <generic:tab-template id="create-role-tab" label="Create Patient">
+            <jsp:body>
+                <generic:create-role createPatient="true" createStaff="false" createDoctor="false"></generic:create-role>
+            </jsp:body>
+        </generic:tab-template>
     </jsp:body>
 </generic:page-template>
