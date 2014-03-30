@@ -21,6 +21,31 @@ public class Query {
                 "username = '" + username + "' AND " +
                 "password = '" + password + "';";
     }
+
+    public static String AddPatientRecord(int doctorId, int patientId, String visitStartTime, String visitEndTime, String diagnosis, String prescription, String treatmentSchedule, String freeform) {
+        return 
+            "INSERT INTO "+
+                "patient_record ( "+
+                    "doctor_id, "+
+                    "patient_id, "+
+                    "visit_start_time, "+
+                    "visit_end_time, "+
+                    "diagnosis, "+
+                    "prescription, "+
+                    "treatment_schedule, "+
+                    "freeform "+
+                ")  "+
+            "VALUES ( "+
+                "'" + doctorId + "', "+
+                "'" + patientId + "', "+
+                "'" + visitStartTime + "', "+
+                "'" + visitEndTime + "', "+
+                "'" + diagnosis + "', "+
+                "'" + prescription + "', "+
+                "'" + treatmentSchedule + "', "+
+                "'" + freeform +  "' "+
+            "); ";
+    }
     
     public static String DefaultPatientList() {
         return
@@ -193,5 +218,112 @@ public class Query {
                 "test2 " +
             "ON " +
                 "appointment.patient_id = test2.patient_id ";
+    }
+
+    public static String DoctorPatientRecord(int doctorId, int patientId) {
+        return
+            "SELECT " +
+                    "patient.patient_name, " +
+                    "doctor.doctor_name, " +
+                    "patient_record.patient_record_id, " +
+                    "patient_record.doctor_id, " +
+                    "patient_record.patient_id, " +
+                    "date_format(date(patient_record.visit_start_time), '%m/%d/%Y') as patient_record_date, " +
+                    "patient_record.visit_start_time," +
+                    "patient_record.visit_end_time," +
+                    "patient_record.diagnosis, " +
+                    "patient_record.prescription, " +
+                    "patient_record.treatment_schedule, " +
+                    "patient_record.freeform " +
+            "FROM " +
+                    "doctor, " +
+                    "patient, " +
+                    "patient_record " +
+            "WHERE " +
+                    "doctor.doctor_id = patient_record.doctor_id AND " +
+                    "patient.patient_id = patient_record.patient_id AND " +
+                    "patient_record.patient_id = " + patientId + " AND " +
+                    "patient_record.doctor_id = " + doctorId + " " +
+            "UNION " +
+            "SELECT " +
+                    "patient.patient_name, " +
+                    "doctor.doctor_name, " +
+                    "patient_record.patient_record_id, " +
+                    "patient_record.doctor_id, " +
+                    "patient_record.patient_id, " +
+                    "date_format(date(patient_record.visit_start_time), '%m/%d/%Y') as patient_record_date, " +
+                    "patient_record.visit_start_time," +
+                    "patient_record.visit_end_time," +
+                    "patient_record.diagnosis, " +
+                    "patient_record.prescription, " +
+                    "patient_record.treatment_schedule, " +
+                    "patient_record.freeform " +
+            "FROM " +
+                    "doctor, " +
+                    "patient, " +
+                    "grant_permission, " +
+                    "patient_record " +
+            "WHERE " +
+                    "doctor.doctor_id = patient_record.doctor_id AND " +
+                    "patient.patient_id = patient_record.patient_id AND " +
+                    "patient_record.doctor_id = grant_permission.granter_doctor_id AND " +
+                    "grant_permission.patient_id = patient_record.patient_id AND " +
+                    "grant_permission.grantee_doctor_id = " + doctorId + " AND " +
+                    "patient.patient_id = " + patientId + " ;";
+    }
+
+    public static String StaffPatientRecord(int staffId, int patientId) {
+        return
+            "SELECT  " +
+                "patient.patient_name,  " +
+                "doctor.doctor_name,  " +
+                "patient_record.patient_record_id,  " +
+                "patient_record.doctor_id,  " +
+                "patient_record.patient_id,  " +
+                "date_format(date(patient_record.visit_start_time), '%m/%d/%Y') as patient_record_date,  " +
+                "patient_record.visit_start_time, " +
+                "patient_record.visit_end_time, " +
+                "patient_record.diagnosis,  " +
+                "patient_record.prescription,  " +
+                "patient_record.treatment_schedule,  " +
+                "patient_record.freeform  " +
+            "FROM  " +
+                "doctor,  " +
+                "patient,  " +
+                "patient_record, " +
+                "staff, " +
+                "assigned_staff " +
+            "WHERE  " +
+                "doctor.doctor_id = patient_record.doctor_id AND  " +
+                "patient.patient_id = patient_record.patient_id AND  " +
+                "patient_record.patient_id = " + patientId + " AND  " +
+                "patient_record.doctor_id = assigned_staff.doctor_id AND " +
+                "assigned_staff.staff_id = staff.staff_id AND  " +
+                "staff.staff_id = " + staffId + " ;";
+    }
+
+    public static String PatientRecord(int patientId) {
+        return
+            "SELECT  " +
+                "patient.patient_name,  " +
+                "doctor.doctor_name,  " +
+                "patient_record.patient_record_id,  " +
+                "patient_record.doctor_id,  " +
+                "patient_record.patient_id,  " +
+                "date_format(date(patient_record.visit_start_time), '%m/%d/%Y') as patient_record_date,  " +
+                "patient_record.visit_start_time, " +
+                "patient_record.visit_end_time, " +
+                "patient_record.diagnosis,  " +
+                "patient_record.prescription,  " +
+                "patient_record.treatment_schedule,  " +
+                "patient_record.freeform  " +
+            "FROM  " +
+                "doctor,  " +
+                "patient,  " +
+                "patient_record " +
+            "WHERE  " +
+                "doctor.doctor_id = patient_record.doctor_id AND  " +
+                "patient.patient_id = patient_record.patient_id AND  " +
+                "patient_record.patient_id = " + patientId + "; ";
     }
 }

@@ -10,7 +10,8 @@
 
 
 <generic:page-template title="Patient">
-    <jsp:body>   
+    <jsp:body>
+         <a href='${pageContext.request.contextPath}/patientRecord.jsp?patientId=${user.getRoleId()}' target='_blank'>goto patientRecord</a>
          <generic:patient-profile></generic:patient-profile>
     </jsp:body>
 </generic:page-template>
