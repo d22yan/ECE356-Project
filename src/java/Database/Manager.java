@@ -86,7 +86,7 @@ public class Manager {
                 throw new ClassNotFoundException();
             }
 
-            int nextRoleId = maxRoleIdSet.getInt("max_role_id");
+            int nextRoleId = maxRoleIdSet.getInt("max_role_id") + 1;
             String asd2 = Database.Query.CreateRole(groupName, name);
             statement.executeUpdate(Database.Query.CreateRole(groupName, name));
             statement.executeUpdate(Database.Query.CreateUser(username, password, groupName, nextRoleId));
