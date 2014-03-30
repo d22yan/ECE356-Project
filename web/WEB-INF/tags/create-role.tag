@@ -6,7 +6,7 @@
 
 <%@tag description="Create Role" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib tagdir="/WEB-INF/tags" prefix="patient-profile" %>
+<%@taglib tagdir="/WEB-INF/tags" prefix="create-role" %>
 
 <%@attribute name="createPatient" required="true" %>
 <%@attribute name="createStaff" required="true" %>

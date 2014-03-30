@@ -398,4 +398,20 @@ public class Query {
                 "patient.patient_id = patient_record.patient_id AND  " +
                 "patient_record.patient_id = " + patientId + "; ";
     }
+
+    public static String HistoryTable(String historyTable) {
+        return 
+            "SELECT " +
+                "* " +
+            "FROM " +
+                historyTable + " ; ";
+    }
+
+    public static String HistoryTableColumn(String historyTable) {
+        return
+            "SHOW " +
+                "COLUMNS " +
+            "FROM " +
+                historyTable + " ; ";
+    }
 }
