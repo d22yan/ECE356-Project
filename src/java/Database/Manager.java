@@ -43,7 +43,7 @@ public class Manager {
         return connection;
     }
     
-     public static User getLogin(String username, String password)
+    public static User getLogin(String username, String password)
             throws ClassNotFoundException, SQLException {
         Connection conection = null;
         Statement statement = null;
@@ -62,6 +62,53 @@ public class Manager {
                     userSet.getString("group_name"),
                     userSet.getInt("role_id")
             );
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conection != null) {
+                conection.close();
+            }
+        }
+    }
+
+    public static void CreateRole(String username, String password,  String groupName, String name) 
+    throws ClassNotFoundException, SQLException {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            String asd = Database.Query.getMaxRoleId(groupName);
+            ResultSet maxRoleIdSet = statement.executeQuery(Database.Query.getMaxRoleId(groupName));
+
+            if (!maxRoleIdSet.first()) {
+                throw new ClassNotFoundException();
+            }
+
+            int nextRoleId = maxRoleIdSet.getInt("max_role_id") + 1;
+            String asd2 = Database.Query.CreateRole(groupName, name);
+            statement.executeUpdate(Database.Query.CreateRole(groupName, name));
+            statement.executeUpdate(Database.Query.CreateUser(username, password, groupName, nextRoleId));
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conection != null) {
+                conection.close();
+            }
+        }
+    }
+     
+    public static User findUser(String username)
+    throws ClassNotFoundException, SQLException {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet userSet = statement.executeQuery(Database.Query.FindUser(username));
+            return (!userSet.first()) ? null : new User(userSet.getString("username"), userSet.getString("password"), userSet.getString("group_name"), userSet.getInt("role_id"));
         } finally {
             if (statement != null) {
                 statement.close();

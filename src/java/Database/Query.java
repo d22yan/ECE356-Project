@@ -22,6 +22,47 @@ public class Query {
                 "password = '" + password + "';";
     }
 
+    public static String CreateUser(String username, String password, String groupName, int roleId) {
+        return 
+            "INSERT INTO " +
+                "user_account " +
+            "VALUES( " +
+                "'" + username + "', " +
+                "'" + password + "', " +
+                "'" + groupName + "', " +
+                roleId + " " +
+            "); ";
+    }
+
+    public static String CreateRole(String groupName, String name) {
+        return
+            "INSERT INTO " +
+                groupName + "( " +
+                    groupName + "_name " +
+                ") " +
+            "VALUES ( " +
+                "'" + name + "' " +
+            "); ";
+    }
+    
+    public static String FindUser(String username) {
+        return
+            "SELECT " +
+                    "* " +
+            "FROM " +
+                    "user_account " +
+            "WHERE " +
+                    "user_account.username = '" + username + "'; ";
+    }
+
+    public static String getMaxRoleId(String groupName) {
+        return
+            "SELECT " +
+                "MAX(" + groupName + "_id) as max_role_id " +
+            "FROM " +
+                groupName + "; ";
+    }
+
     public static String AddPatientRecord(int doctorId, int patientId, String visitStartTime, String visitEndTime, String diagnosis, String prescription, String treatmentSchedule, String freeform) {
         return 
             "INSERT INTO "+
