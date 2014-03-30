@@ -48,8 +48,8 @@
 				$('div#create-role-form > button').click(function() {
 					group = $('div#create-role-form select#select-role').find(":selected").val().replace(/\s/g, '').toLowerCase();
 					username = $('div#create-role-form input#input-username').val().replace(/\s/g, '').toLowerCase();
-					password = $('div#create-role-form input#input-password').val().replace(/\s/g, '').toLowerCase();
-					name = $('div#create-role-form input#input-name').val().replace(/\s/g, '').toLowerCase();
+					password = $('div#create-role-form input#input-password').val();
+					name = $('div#create-role-form input#input-name').val();
 					// null check
 					if (group == "" || username == "" || password == "" || name == "") {
 						alert ("cannot have null input");
