@@ -10,14 +10,12 @@
 <%@taglib tagdir="/WEB-INF/tags" prefix="generic" %>
 <%
     String defaultQuery = null;
-    String doctorQuery = null;
     String staffQuery = null;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     if (request.getSession().getAttribute("user") != null) {
         Model.User user = (Model.User) request.getSession().getAttribute("user");
-        doctorQuery = Database.Query.doctorAppointmentList(user.getRoleId());
-        staffQuery = Database.Query.staffAppointmentList(user.getRoleId());
-//        defaultQuery = Database.Query.staffappointmentList(user.getRoleId());
+        staffQuery = Database.Query.staffDoctorList(user.getRoleId());
+        defaultQuery = Database.Query.doctorList();
     }
 %>
 
@@ -28,7 +26,7 @@
                 float:left;
                 margin-left: 10px; 
             }
-            #appointment-table > tbody[id^="patient-"] :hover {
+            #doctor-table > tbody[id^="patient-"] :hover {
                 background: #DDDDDD;
             }
         </style>
@@ -40,46 +38,34 @@
             password="<%=Database.ServiceConstant.pwd%>"/>
         <c:choose>
             <c:when test='${user.getGroupName() == "staff"}'>
-                <sql:query dataSource="${connection}" var="appointmentList">
+                <sql:query dataSource="${connection}" var="doctorList">
                     <%=staffQuery%>
                 </sql:query>
             </c:when>
-            <c:when test='${user.getGroupName() == "doctor"}'>
-                <sql:query dataSource="${connection}" var="appointmentList">
-                    <%=doctorQuery%>
+            <c:when test='${user.getGroupName() == "legal"}'>
+                <sql:query dataSource="${connection}" var="doctorList">
+                    <%=defaultQuery%>
                 </sql:query>
             </c:when>
         </c:choose>
-        <table id="appointment-table" class="table">
+        <table id="doctor-table" class="table">
             <thead>
                 <tr>
-                    <th>appointment id</th>
+                    <th>doctor id</th>
                     <th>doctor name</th>
-                    <th>patient name</th>
-                    <th>start time</th>
-                    <th>end time</th>
                 </tr>
             </thead>
-            <c:forEach var="row" items="${appointmentList.rows}">
+            <c:forEach var="row" items="${doctorList.rows}">
                 <tbody>
-                    <td class="appointment-id">
-                        <c:out value="${row.appointment_id}"/>
-                    </td>
                     <td class="doctor-id">
+                        <c:out value="${row.doctor_id}"/>
+                    </td>
+                    <td class="doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
-                    <td class="patient-id">
-                        <c:out value="${row.patient_name}"/>
-                    </td>
-                    <td class="start-time">
-                        <c:out value="${row.appointment_start_time}"/>
-                    </td>
-                    <td class="end-time">
-                        <c:out value="${row.appointment_end_time}"/>
-                    </td>
-                    <c:if test='${user.getGroupName() == "staff"}'>
+                    <c:if test='${user.getGroupName() == "legal"}'>
                         <td>
-                            <a id="edit-appointment-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
+                            <a id="edit-doctor-${row.doctor_id}" data-doctor-id="${row.doctor_id}" href="#">
                                 what is this?
                             </a>
                         </td>
@@ -89,8 +75,8 @@
         </table>
         <script type="text/javascript">
             $(document).ready(function() {
-                $('[id^="edit-appointment"]').click(function(e){
-                    alert("<!--TODO direct to appointment page-->");
+                $('[id^="edit-doctor"]').click(function(e){
+                    alert("<!--TODO direct to doctor page-->");
                 });
             });
         </script>
