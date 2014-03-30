@@ -22,7 +22,7 @@
             float:left;
             margin-left: 10px; 
         }
-        #patient-table > tbody[id^="patient-"] :hover {
+        #patient-table > tbody > tr:hover {
             background: #DDDDDD;
             cursor: pointer;
         }
@@ -36,7 +36,7 @@
     <sql:query dataSource="${connection}" var="itemList">
         ${query}
     </sql:query>
-    <form class="form-inline" style="margin-bottom: 50px">
+    <form class="form-inline clearfix" style="padding: 10px">
         <div id="search-option" class="searchbar">
             <select class="form-control">
                 <c:forEach var="column" items="${columns}">
@@ -92,7 +92,7 @@
                 </c:forEach>
                 <c:if test='${user.getGroupName() == "staff"}'>
                     <td>
-                        <a id="edit-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
+                        <a id="edit-patient-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
                             edit
                         </a>
                     </td>
@@ -106,12 +106,12 @@
         $(document).ready(function() {
             $('#search-range .input-group').datetimepicker({ pickTime: false });
 
-            $('[id^="edit"]').click(function(e){
+            $('[id^="edit-patient"]').click(function(e){
                 e.stopPropagation();
                 alert("<!--TODO direct to patient page-->");
             });
-            $('#patient-table > tbody[id^="patient-"]').click(function(e){
-                alert("<!--TODO direct to visit record page-->");
+            $('#patient-table > tbody > tr[id^="patient-"]').click(function(e){
+                var win = window.open('${pageContext.request.contextPath}/patientRecord.jsp?patientId=' + $(this).data('patient-id'), '_blank');
             });
             $('#search-option').change(function() {
                 if ($(this).find(':selected').data('type') == 'string') {

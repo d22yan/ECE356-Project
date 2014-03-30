@@ -8,8 +8,20 @@ and open the template in the editor.
     Author     : Lewis
 */
 
+
+/* remove outline around tab links on firefox */
+.nav-tabs > .active > a, 
+.nav-tabs > .active > a:hover,
+.nav-tabs > .active > a:focus {
+    outline:none;
+}
+
 #footer {
     background-color: #F5F5F5;
+}
+
+body { 
+    padding-bottom: 70px; 
 }
 
 #credits {
