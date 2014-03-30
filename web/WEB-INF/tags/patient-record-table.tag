@@ -44,6 +44,12 @@
                 float:left;
                 margin-left: 10px; 
             }
+            
+            #patient-record-table > tbody > tr[id^="patient-record"]:hover,
+            #patient-record-table > tbody > tr[id="add-patient-record"]:hover {
+                background: #DDDDDD;
+                cursor: pointer;
+            }
         </style>
         <sql:setDataSource 
             var="connection" 
@@ -250,17 +256,6 @@
                     pickTime: false
                 });
 
-                $(document).on({
-                    mouseenter: function () {
-                        $(this).css("cursor", "pointer");
-                        $(this).css("background", "#DDDDDD");
-                    },
-                    mouseleave: function () {
-                        $(this).css("cursor", "default");
-                        $(this).css("background", "");
-                    }
-                },'#patient-record-table > tbody > tr[id^="patient-record"], #patient-record-table > tbody > tr[id^="add-patient-record"]' );
-
                 $(document).on('click', '#patient-record-table > tbody > tr[id^="patient-record"]', function() {
                     $('#patient-record-table > tbody > tr#data-patient-record-' + $(this).attr('patientRecordId')).toggle();
                 });
@@ -391,7 +386,7 @@
                     $('#patient-record-table tr[id^="data-patient-record"]').each(function() {
                         $(this).hide();
                     });
-                    var searchInput = $('#patient-record-search-input').val().replace(/\s/g, '');
+                    var searchInput = $('#patient-record-search-input').val().toLowerCase().replace(/\s/g, '');
                     var option = $('#patient-record-search-option').find(':selected').val();
                     $('#patient-record-table > tbody > tr[id^="patient-record"]').each(function() {
                         if ($(this).find('[class^="' + option + '"]').text().toLowerCase().replace(/\s/g, '').indexOf(searchInput) == -1 || ($(this).attr('isCurrentPatient') == 0 && isCurrentPatient)) {

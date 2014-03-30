@@ -30,6 +30,11 @@
                 float:left;
                 margin-left: 10px; 
             }
+            
+            #patient-table > tbody > tr[id^="patient-"]:hover {
+                background: #DDDDDD;
+                cursor: pointer;
+            }
         </style>
         <sql:setDataSource 
             var="connection" 
@@ -133,14 +138,6 @@
                     var win = window.open('${pageContext.request.contextPath}/patientRecord.jsp?patientId=' + $(this).data('patient-id'), '_blank');
                 });
 
-                $('#patient-table > tbody > tr').hover(function() {
-                    $(this).css("cursor", "pointer");
-                    $(this).css("background", "#DDDDDD");
-                }, function() {
-                    $(this).css("cursor", "default");
-                    $(this).css("background", "");
-                });
-
                 $('#search-option').change(function() {
                     if ($(this).find(':selected').data('type') == 'string') {
                         $('#search-single').show();
@@ -201,7 +198,7 @@
                 }
 
                 function searchFilter() {
-                    var searchInput = $('#search-input').val().replace(/\s/g, '');
+                    var searchInput = $('#search-input').val().toLowerCase().replace(/\s/g, '');
                     var option = $('#search-option').find(':selected').val();
                     $('#patient-table tbody tr').each(function() {
                         if ($(this).find('[class^="' + option + '"]').text().toLowerCase().replace(/\s/g, '').indexOf(searchInput) == -1 || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
