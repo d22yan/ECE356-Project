@@ -9,6 +9,7 @@
 <%@taglib prefix="generic" tagdir="/WEB-INF/tags"%>
 
 <%@attribute name="title" required="true"%>
+<%@attribute name="tabbed"%>
 
 <!DOCTYPE html>
 <html>
@@ -96,7 +97,18 @@
     <div class="container">
         <c:choose>
             <c:when test="${title == 'Home' || user.getGroupName() == title.toLowerCase()}">
-                <jsp:doBody/>
+                <c:choose>
+                    <c:when test="${empty tabbed}">
+                        <jsp:doBody/>
+                    </c:when>
+                    <c:otherwise>
+                        <ul class="nav nav-tabs">
+                        </ul>
+                        <div class="tab-content">
+                            <jsp:doBody/>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:otherwise>
                 <div class="alert alert-danger fade in">
