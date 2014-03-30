@@ -240,6 +240,16 @@ public class Query {
             "ON " +
                 "doctor.doctor_id = test.doctor_id;";
     }
+    
+    public static String doctorList()
+    {
+        return
+            "SELECT " +
+                "doctor.doctor_id, " +
+                "doctor.doctor_name " +
+            "FROM " +
+                "ece356db_d22yan.doctor ";
+    }
 
     public static String DoctorPatientRecord(int doctorId, int patientId) {
         return

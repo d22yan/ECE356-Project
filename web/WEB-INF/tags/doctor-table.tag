@@ -15,7 +15,7 @@
     if (request.getSession().getAttribute("user") != null) {
         Model.User user = (Model.User) request.getSession().getAttribute("user");
         staffQuery = Database.Query.staffDoctorList(user.getRoleId());
-//        defaultQuery = Database.Query.staffappointmentList(user.getRoleId());
+        defaultQuery = Database.Query.doctorList();
     }
 %>
 
@@ -42,9 +42,9 @@
                     <%=staffQuery%>
                 </sql:query>
             </c:when>
-            <c:when test='${user.getGroupName() == "st"}'>
+            <c:when test='${user.getGroupName() == "legal"}'>
                 <sql:query dataSource="${connection}" var="doctorList">
-                    <%=staffQuery%>
+                    <%=defaultQuery%>
                 </sql:query>
             </c:when>
         </c:choose>
