@@ -8,11 +8,6 @@ package Servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author root
  */
-@WebServlet(name = "AssignStaff", urlPatterns = {"/AssignStaff"})
-public class AssignStaff extends HttpServlet {
+@WebServlet(name = "GrantDoctor", urlPatterns = {"/GrantDoctor"})
+public class GrantDoctor extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,31 +33,20 @@ public class AssignStaff extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        if (request.getParameter("doctorId") != null) {
-            int doctorId = Integer.parseInt(request.getParameter("doctorId"));
-            String[] staffIdList = request.getParameterValues("selected[]");
-            ResultSet assignedStaff = Database.Manager.getAssignedStaff(doctorId);
-            Database.Manager.clearAssignedStaff(doctorId);
-            for (String staffId : staffIdList) {
-                if (!staffId.equals("null")) {
-                    Database.Manager.addAssignedStaff(doctorId, Integer.parseInt(staffId), false);
-                }
-            }
-            try {
-                while (assignedStaff.next()) {
-                    if (assignedStaff.getBoolean("view_patient_permission")) {
-                        Database.Manager.grantStaffPermission(assignedStaff.getInt("doctor_id"), assignedStaff.getInt("staff_id"));
+        try (PrintWriter out = response.getWriter()) {
+            if (request.getParameter("doctorId") != null && request.getParameter("granteeDoctorId") != null) {
+                int granterDoctorId = Integer.parseInt(request.getParameter("doctorId"));
+                int granteeDoctorId = Integer.parseInt(request.getParameter("granteeDoctorId"));
+                String[] patientIdList = request.getParameterValues("selected[]");
+                Database.Manager.clearGrantDoctor(granterDoctorId, granteeDoctorId);
+                for (String patientId : patientIdList) {
+                    if (!patientId.equals("null")) {
+                        Database.Manager.grantDoctorPatient(granterDoctorId, granteeDoctorId, Integer.parseInt(patientId));
                     }
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(AssignStaff.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try (PrintWriter out = response.getWriter()) {
                 out.println(1);
-            }
-        } else {
-            try (PrintWriter out = response.getWriter()) {
-                out.println(0);
+            } else {
+                out.println(-1);
             }
         }
     }

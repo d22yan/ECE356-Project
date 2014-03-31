@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import static java.lang.System.out;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -18,13 +19,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
  *
  * @author root
  */
-@WebServlet(name = "AssignStaff", urlPatterns = {"/AssignStaff"})
-public class AssignStaff extends HttpServlet {
+@WebServlet(name = "GrantDoctorPatient", urlPatterns = {"/GrantDoctorPatient"})
+public class GrantDoctorPatient extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,31 +38,22 @@ public class AssignStaff extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        if (request.getParameter("doctorId") != null) {
-            int doctorId = Integer.parseInt(request.getParameter("doctorId"));
-            String[] staffIdList = request.getParameterValues("selected[]");
-            ResultSet assignedStaff = Database.Manager.getAssignedStaff(doctorId);
-            Database.Manager.clearAssignedStaff(doctorId);
-            for (String staffId : staffIdList) {
-                if (!staffId.equals("null")) {
-                    Database.Manager.addAssignedStaff(doctorId, Integer.parseInt(staffId), false);
+        try (PrintWriter out = response.getWriter()) {
+            if (request.getParameter("granterDoctorId") != null && request.getParameter("granteeDoctorId") != null) {
+                int granterDoctorId = Integer.parseInt(request.getParameter("granterDoctorId"));
+                int granteeDoctorId = Integer.parseInt(request.getParameter("granteeDoctorId"));
+                String grantDoctorPatientString = "";
+                List<String> patientIdList = Database.Manager.getGrantDoctorPatient(granterDoctorId, granteeDoctorId);
+                for (String patientId : patientIdList) {
+                    grantDoctorPatientString = grantDoctorPatientString + patientId + ",";
                 }
-            }
-            try {
-                while (assignedStaff.next()) {
-                    if (assignedStaff.getBoolean("view_patient_permission")) {
-                        Database.Manager.grantStaffPermission(assignedStaff.getInt("doctor_id"), assignedStaff.getInt("staff_id"));
-                    }
+                if (grantDoctorPatientString != null) {
+                    out.println(grantDoctorPatientString);
+                } else {
+                    out.println(0);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(AssignStaff.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try (PrintWriter out = response.getWriter()) {
-                out.println(1);
-            }
-        } else {
-            try (PrintWriter out = response.getWriter()) {
-                out.println(0);
+            } else {
+                out.println(-1);
             }
         }
     }

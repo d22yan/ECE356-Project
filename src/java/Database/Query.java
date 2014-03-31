@@ -110,7 +110,9 @@ public class Query {
             "ON " +
                     "patient_record_last_visit_date.patient_id = patient.patient_id " +
             "WHERE  " +
-                "patient.default_doctor_id = doctor.doctor_id; ";
+                "patient.default_doctor_id = doctor.doctor_id " +
+            "ORDER BY " +
+                "patient.patient_name; ";
     }
     
     public static String DoctorPatientList(int doctorId) {
@@ -142,7 +144,9 @@ public class Query {
             "LEFT JOIN " +
                 "doctor " +
             "ON " +
-                "patient.default_doctor_id = doctor.doctor_id; ";
+                "patient.default_doctor_id = doctor.doctor_id " +
+            "ORDER BY " +
+                "patient.patient_name; ";
     }
     
     public static String StaffPatientList(int staffId) {
@@ -185,7 +189,9 @@ public class Query {
             "LEFT JOIN " +
                 "doctor " +
             "ON " +
-                "patient.default_doctor_id = doctor.doctor_id; ";
+                "patient.default_doctor_id = doctor.doctor_id " +
+            "ORDER BY " +
+                "patient.patient_name; ";
     }
     public static String staffAppointmentList(int staffId) {
         return
