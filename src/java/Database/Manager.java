@@ -7,6 +7,8 @@
 package Database;
 import Model.User;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -350,6 +352,93 @@ public class Manager {
             conection = getConnection();
             statement = conection.createStatement();
             statement.executeUpdate("INSERT INTO assigned_staff(doctor_id, staff_id, view_patient_permission) VALUES(" + doctorId + ", " + staffId + ", " + viewPatientPermission + ");");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static List<String> getGrantDoctorPatient(int granterDoctorId, int granteeDoctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        List<String> patientIdList = new ArrayList();
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet patientIdSet = statement.executeQuery("SELECT * FROM grant_permission WHERE granter_doctor_id = " + granterDoctorId + " AND grantee_doctor_id = " + granteeDoctorId + " ;");
+            while (patientIdSet.next()) {
+                patientIdList.add(patientIdSet.getString("patient_id"));
+            }
+            return patientIdList;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void clearGrantDoctor(int granterDoctorId, int granteeDoctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("DELETE FROM grant_permission WHERE granter_doctor_id = " + granterDoctorId + " AND grantee_doctor_id = " + granteeDoctorId + " ;");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static void grantDoctorPatient(int granterDoctorId, int granteeDoctorId, int patientId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("INSERT INTO grant_permission(granter_doctor_id, grantee_doctor_id, patient_id) VALUES(" + granterDoctorId + ", " + granteeDoctorId + ", " + patientId + ");");
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
