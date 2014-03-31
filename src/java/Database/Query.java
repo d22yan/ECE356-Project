@@ -166,7 +166,7 @@ public class Query {
                             "WHERE  " +
                                     "assigned_patient.doctor_id = doctor.doctor_id AND  " +
                                     "doctor.doctor_id = assigned_staff.doctor_id AND  " +
-                                    "assigned_staff.staff_id = 1 " +
+                                    "assigned_staff.staff_id = " + staffId + " " +
                     ") as assigned_staff_to_assigned_patient  " +
             "ON   " +
                 "patient.patient_id = assigned_staff_to_assigned_patient.patient_id  " +
