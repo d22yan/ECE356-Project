@@ -94,7 +94,7 @@ public class Query {
                 "patient.patient_id,  " +
                 "patient.patient_name,  " +
                 "doctor.doctor_name, " +
-                "patient_record_last_visit_date.last_visit_date, " + 
+                "patient_record_last_visit_date.last_visit_date " + 
             "FROM  " +
                 "doctor,  " +
                 "patient  " +
