@@ -7,6 +7,9 @@
 package Database;
 import Model.User;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -146,6 +149,77 @@ public class Manager {
                 conection.close();
             }
         }
+    }
+    
+    public static void modifyAppointment(int appointmentId, int doctorId, int patId, String startDate, String endDate)
+            throws ClassNotFoundException, SQLException {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate(
+                Database.Query.modifyAppointment(appointmentId, doctorId, patId, startDate, endDate)
+            );
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conection != null) {
+                conection.close();
+            }
+        }
+    }
+    
+    public static boolean verifyAppointment( Date start, Date end, int doctorId, int appointmentId )
+    {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet patientRecordSet = statement.executeQuery("SELECT * FROM appointment WHERE appointment.doctor_id = " + doctorId + " AND appointment.appointment_id != " + appointmentId);
+            while( patientRecordSet.next() )
+            {
+                Date tempTestStart = start;
+                Date tempTestEnd = end;
+                String tempStartDateString = patientRecordSet.getString("appointment_start_time");
+                String tempEndDateString = patientRecordSet.getString("appointment_end_time");
+                
+                SimpleDateFormat tempformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+                Date tempStart = tempformatter.parse(tempStartDateString);
+                Date tempEnd = tempformatter.parse(tempEndDateString);
+                
+                if ( tempStart.before(end) && tempEnd.after(start) ) 
+                {
+                    return false;
+                }
+            }
+            if ( end.before(start) )
+            {
+                return false;
+            }
+            return true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return false;
     }
 
     public static int selectLastPatientRecordId() {

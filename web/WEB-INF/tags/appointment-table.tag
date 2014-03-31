@@ -28,8 +28,9 @@
                 float:left;
                 margin-left: 10px; 
             }
-            #appointment-table > tbody[id^="patient-"] :hover {
+            #appointment-table > tbody > tr[id^="appointment-"]:hover {
                 background: #DDDDDD;
+                cursor: pointer;
             }
         </style>
         <sql:setDataSource 
@@ -60,38 +61,56 @@
                     <th>end time</th>
                 </tr>
             </thead>
-            <c:forEach var="row" items="${appointmentList.rows}">
-                <tbody>
-                    <td class="appointment-id">
-                        <c:out value="${row.appointment_id}"/>
-                    </td>
-                    <td class="doctor-id">
-                        <c:out value="${row.doctor_name}"/>
-                    </td>
-                    <td class="patient-id">
-                        <c:out value="${row.patient_name}"/>
-                    </td>
-                    <td class="start-time">
-                        <c:out value="${row.appointment_start_time}"/>
-                    </td>
-                    <td class="end-time">
-                        <c:out value="${row.appointment_end_time}"/>
-                    </td>
-                    <c:if test='${user.getGroupName() == "staff"}'>
-                        <td>
-                            <a id="edit-appointment-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
-                                what is this?
-                            </a>
+            <tbody>
+                <c:forEach var="row" items="${appointmentList.rows}">
+                    <tr id="appointment-${row.appointment_id}" 
+                        data-appointment-id = "${row.appointment_id}" 
+                        data-doctor-id = "${row.doctor_id}" 
+                        data-patient-id = "${row.patient_id}"
+                        data-start-time = "${row.appointment_start_time}"
+                        data-end-time="${row.appointment_end_time}">
+                        <td class="appointment-id">
+                            <c:out value="${row.appointment_id}"/>
                         </td>
-                    </c:if>
-                </tbody>
-            </c:forEach>
+                        <td class="doctor-name">
+                            <c:out value="${row.doctor_name}"/>
+                        </td>
+                        <td class="patient-name">
+                            <c:out value="${row.patient_name}"/>
+                        </td>
+                        <td class="start-time">
+                            <c:out value="${row.appointment_start_time}"/>
+                        </td>
+                        <td class="end-time">
+                            <c:out value="${row.appointment_end_time}"/>
+                        </td>
+                        <c:if test='${user.getGroupName() == "staff"}'>
+                            <td>
+                                <a id="edit-appointment-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
+                                    what is this?
+                                </a>
+                            </td>
+                        </c:if>
+                    </tr>
+                </c:forEach>
+            </tbody>
         </table>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('[id^="edit-appointment"]').click(function(e){
                     alert("<!--TODO direct to appointment page-->");
                 });
+            });
+            
+            $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
+                if ( ${user.getGroupName() == "staff"} )
+                {
+                    var win = window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
+                                                                                                'doctorId=' + $(this).data('doctor-id') + '&' +
+                                                                                                'patientId=' + $(this).data('patient-id') + '&' +
+                                                                                                'startTime=' + $(this).data('start-time') + '&' +
+                                                                                                 'endTime=' + $(this).data('end-time'), '_blank');
+                }
             });
         </script>
     </c:if>
