@@ -176,10 +176,12 @@
                                     <label>prescription</label>
                                     <input class="form-control" value="${row.prescription}" disabled></input>
                                 </div>
-                                <div class="col-md-12">
-                                    <label>freeform</label>
-                                    <input class="form-control" value="${row.freeform}" disabled></input>
-                                </div>
+                                <c:if test='${user.getGroupName() != "patient"}'> 
+                                    <div class="col-md-12">
+                                        <label>freeform</label>
+                                        <input class="form-control" value="${row.freeform}" disabled></input>
+                                    </div>
+                                </c:if>
                             </div>
                         </td>
                     </tr>

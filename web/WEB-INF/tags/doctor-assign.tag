@@ -142,6 +142,37 @@
 
 		<!-- Initialize the plugin: -->
 		<script type="text/javascript">
+		function getGrantDoctorPatient(granteeDoctorId) {
+			$.ajax({
+				url:
+					'${pageContext.request.contextPath}/GrantDoctorPatient',
+				type:
+					'POST',
+				data: {
+					'granterDoctorId': '<%=doctorId%>',
+					'granteeDoctorId': granteeDoctorId
+				},
+				success: function(data) {
+					var patientIdArray = data.split(",");
+					selected = String($('#selector-Grant-Doctor').val()).split(',');
+					for (index = 0; index < selected.length; index++) {
+						console.log("asd " + selected[index]);
+						if (selected[index] != "null") {
+							$('#selector-Grant-Doctor').multiselect('deselect', selected[index]);
+						}
+					}
+					for (index = 0; index < patientIdArray.length; index++) {
+						if (patientIdArray[index] != "null") {
+							$('#selector-Grant-Doctor').multiselect('select', patientIdArray[index]);
+						}
+					}
+				},
+				error: function(req, status, error) {
+					alert(status);
+				}
+			});
+		}
+
 		$(document).ready(function() {
 			$('.multiselect').multiselect({
 				buttonClass: 'btn btn-default btn-sm',
@@ -155,34 +186,7 @@
 				enableFiltering: true,
 				onChange: function(element, checked) {
 					granteeDoctorId = element.val();
-					$.ajax({
-						url:
-							'${pageContext.request.contextPath}/GrantDoctorPatient',
-						type:
-							'POST',
-						data: {
-							'granterDoctorId': '<%=doctorId%>',
-							'granteeDoctorId': granteeDoctorId
-						},
-						success: function(data) {
-							var patientIdArray = data.split(",");
-							selected = String($('#selector-Grant-Doctor').val()).split(',');
-							for (index = 0; index < selected.length; index++) {
-								console.log("asd " + selected[index]);
-								if (selected[index] != "null") {
-									$('#selector-Grant-Doctor').multiselect('deselect', selected[index]);
-								}
-							}
-							for (index = 0; index < patientIdArray.length; index++) {
-								if (patientIdArray[index] != "null") {
-									$('#selector-Grant-Doctor').multiselect('select', patientIdArray[index]);
-								}
-							}
-						},
-						error: function(req, status, error) {
-							alert(status);
-						}
-					});
+					getGrantDoctorPatient(granteeDoctorId);
 				}
 			});
 
@@ -220,6 +224,8 @@
 					}
 				});
 			});
+
+			getGrantDoctorPatient($('#selector-Grant-Doctor-Grantee').val());
 		});
 		</script>
     </c:if>
