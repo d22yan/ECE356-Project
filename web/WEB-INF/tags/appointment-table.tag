@@ -28,8 +28,9 @@
                 float:left;
                 margin-left: 10px; 
             }
-            #appointment-table > tbody[id^="patient-"] :hover {
+            #appointment-table > tbody > tr[id^="appointment-"]:hover {
                 background: #DDDDDD;
+                cursor: pointer;
             }
         </style>
         <sql:setDataSource 
@@ -50,6 +51,34 @@
                 </sql:query>
             </c:when>
         </c:choose>
+        <form id="appointment-searchbar" class="form-inline clearfix" style="padding: 10px">
+            <div id="search-option" class="searchbar">
+                <select class="form-control">
+                    <option value="appointment-id" selected="selected" data-type="int">appointment-id</option>
+                    <option value="doctor-name" data-type="string">doctor name</option>
+                    <option value="patient-name" data-type="string">default doctor name</option>
+                    <option value="start-time" data-type="date">start time</option>
+                    <option value="end-time" data-type="date">end time</option>
+                </select> 
+            </div>
+            <div id="search-single" class="searchbar" style="width:200px" hidden>
+                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
+            </div>
+            <div id="search-range" class="form-inline searchbar" style="width:500px">
+                <div class="input-group date" style="float:left;padding-right:5px; width:200px">
+                    <input id="search-min" class="form-control" type="search" placeholder="min"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="input-group date" style="width:200px">
+                    <input id="search-max" class="form-control" type="search" placeholder="max"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </form>
         <table id="appointment-table" class="table">
             <thead>
                 <tr>
@@ -58,10 +87,14 @@
                     <th>patient name</th>
                     <th>start time</th>
                     <th>end time</th>
+                    <c:if test='${user.getGroupName() == "staff"}'>
+                        <th>details</th>
+                    </c:if>
                 </tr>
             </thead>
+            <tbody>
             <c:forEach var="row" items="${appointmentList.rows}">
-                <tbody>
+                <tr id="appointment-${row.appointment_id}">
                     <td class="appointment-id">
                         <c:out value="${row.appointment_id}"/>
                     </td>
@@ -84,8 +117,9 @@
                             </a>
                         </td>
                     </c:if>
-                </tbody>
+                </tr>
             </c:forEach>
+            </tbody>
         </table>
         <script type="text/javascript">
             $(document).ready(function() {
