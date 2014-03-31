@@ -26,13 +26,7 @@
 <html>
     <c:if test='${user != null}'>
         <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
-            
             #patient-table > tbody > tr[id^="patient-"]:hover {
-                background: #DDDDDD;
                 cursor: pointer;
             }
         </style>
@@ -81,13 +75,17 @@
                 </a>
             </c:if>
         </form>
-        <table id="patient-table" class="table">
+        <div class="table-responsive">
+        <table id="patient-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
-                    <th>patient</th>
-                    <th>patient #</th>
+                    <th>patient name</th>
+                    <th>patient id</th>
                     <th>default doctor</th>
                     <th>last visit date</th>
+                    <c:if test='${user.getGroupName() == "staff"}'>
+                        <th>edit</th>
+                    </c:if>
                 </tr>
             </thead>
             <tbody>
@@ -110,20 +108,19 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-patient-${row.patient_id}" data-patient-id="${row.patient_id}">
+                            <button type="button" id="edit-patient-${row.patient_id}" class="btn btn-primary btn-xs" data-patient-id="${row.patient_id}">
                                 edit
-                            </a>
+                            </button>
                         </td>
                     </c:if>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
+        </div>
         <script type="text/javascript">
             var isCurrentPatient = false;
             
-            
-
             $(document).ready(function() {
                 $(function(){
                     $("#patient-table").tablesorter();

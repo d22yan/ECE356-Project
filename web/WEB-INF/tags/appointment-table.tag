@@ -24,12 +24,7 @@
 <html>
     <c:if test='${user != null}'>
         <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
             #appointment-table > tbody > tr[id^="appointment-"]:hover {
-                background: #DDDDDD;
                 cursor: pointer;
             }
         </style>
@@ -79,7 +74,8 @@
                 </div>
             </div>
         </form>
-        <table id="appointment-table" class="table">
+        <div class="table-responsive">
+        <table id="appointment-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
                     <th>appointment id</th>
@@ -112,15 +108,16 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-appointment-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
-                                what is this?
-                            </a>
+                            <button id="edit-appointment-${row.appointment_id}" class="btn btn-primary btn-xs" data-appointment-id="${row.appointment_id}" href="#">
+                                edit
+                            </button>
                         </td>
                     </c:if>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
+        </div>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('[id^="edit-appointment"]').click(function(e){
