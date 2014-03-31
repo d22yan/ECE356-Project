@@ -26,7 +26,6 @@
         <style type="text/css">
             #appointment-table > tbody > tr[id^="appointment-"]:hover {
                 cursor: pointer;
-                cursor: pointer;
             }
         </style>
         <sql:setDataSource 
