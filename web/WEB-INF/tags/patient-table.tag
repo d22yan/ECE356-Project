@@ -123,6 +123,9 @@
             var isCurrentPatient = false;
 
             $(document).ready(function() {
+                $(function(){
+                    $("#patient-table").tablesorter();
+                });
                 clearSearchFilter();
                 toggleCurrentPatient(true);
                 $('#search-option option[value="patient-record-id"]').prop('selected', true);

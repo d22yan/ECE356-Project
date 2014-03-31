@@ -28,7 +28,7 @@
         <script src="${pageContext.request.contextPath}/resources/scripts/bootstrap.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/scripts/moment-2.5.1.js"></script>
         <script src="${pageContext.request.contextPath}/resources/scripts/bootstrap-datetimepicker.min.js"></script>
-        
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/scripts/jquery.tablesorter.min.js"></script>
         <!-- Custom resources -->
         <link href="${pageContext.request.contextPath}/resources/styles/custom.css" rel="stylesheet">
         <script src="${pageContext.request.contextPath}/resources/scripts/custom.js"></script>
