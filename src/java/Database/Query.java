@@ -122,7 +122,6 @@ public class Query {
                     "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date, "+
                 "assigned_patient.doctor_id  "+
             "FROM  "+
-                "doctor,  "+
                 "patient  "+
             "LEFT JOIN  "+
                 "assigned_patient  "+
@@ -140,7 +139,9 @@ public class Query {
                     ") AS patient_record_last_visit_date "+
             "ON "+
                     "patient_record_last_visit_date.patient_id = patient.patient_id "+
-            "WHERE  "+
+            "LEFT JOIN " +
+                "doctor " +
+            "ON " +
                 "patient.default_doctor_id = doctor.doctor_id; ";
     }
     
@@ -166,7 +167,7 @@ public class Query {
                             "WHERE  " +
                                     "assigned_patient.doctor_id = doctor.doctor_id AND  " +
                                     "doctor.doctor_id = assigned_staff.doctor_id AND  " +
-                                    "assigned_staff.staff_id = 1 " +
+                                    "assigned_staff.staff_id = " + staffId + " " +
                     ") as assigned_staff_to_assigned_patient  " +
             "ON   " +
                 "patient.patient_id = assigned_staff_to_assigned_patient.patient_id  " +
@@ -415,4 +416,50 @@ public class Query {
             "FROM " +
                 historyTable + " ; ";
     }
+
+    public static String DoctorAssignedStaff(int doctorId) {
+        return
+            "SELECT " +
+                "staff.staff_id, " +
+                "staff.staff_name, " +
+                "assigned_staff.doctor_id " +
+            "FROM  " +
+                "staff " +
+            "LEFT JOIN " +
+                "assigned_staff  " +
+            "ON  " +
+                "staff.staff_id = assigned_staff.staff_id AND " +
+                "assigned_staff.doctor_id = " + doctorId + "; ";
+    }
+
+    public static String DoctorAssignedPatient(int doctorId) {
+        return
+            "SELECT  " +
+                "patient.patient_id, " +
+                "patient.patient_name, " +
+                "assigned_patient.doctor_id " +
+            "FROM " +
+                "patient " +
+            "LEFT JOIN  " +
+                "assigned_patient " +
+            "ON " +
+                "patient.patient_id = assigned_patient.patient_id AND " +
+                "assigned_patient.doctor_id = " + doctorId + "; ";
+    }
+
+    public static String DoctorGrantedStaff(int doctorId) {
+        return
+            "SELECT    " +
+                "staff.staff_id, " +
+                "staff.staff_name, " +
+                "assigned_staff.view_patient_permission " +
+            "FROM   " +
+                "assigned_staff, " +
+                "staff   " +
+            "WHERE  " +
+                "staff.staff_id = assigned_staff.staff_id AND " +
+                "assigned_staff.doctor_id = " + doctorId + "; ";
+    }
+
 }
+

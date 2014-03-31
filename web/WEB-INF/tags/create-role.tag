@@ -70,6 +70,7 @@
 								} else {
 									alert("username taken");
 								}
+								window.location.reload();
 							},
 							error: function(req, status, error) {
 								alert(status);

@@ -19,5 +19,12 @@
                 <generic:patient-table></generic:patient-table>
             </jsp:body>
         </generic:tab-template>
+        <generic:tab-template id="assign-tab" label="Assigns">
+            <jsp:body>
+                <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${user.getRoleId()}" target="_blank">
+                    go to assign
+                </a>
+            </jsp:body>
+        </generic:tab-template>
     </jsp:body>
 </generic:page-template>

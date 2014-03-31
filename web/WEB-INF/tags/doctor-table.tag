@@ -42,7 +42,7 @@
                     <%=staffQuery%>
                 </sql:query>
             </c:when>
-            <c:when test='${user.getGroupName() == "legal"}'>
+            <c:when test='${user.getGroupName() == "admin"}'>
                 <sql:query dataSource="${connection}" var="doctorList">
                     <%=defaultQuery%>
                 </sql:query>
@@ -63,7 +63,14 @@
                     <td class="doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
-                    <c:if test='${user.getGroupName() == "legal"}'>
+                    <c:if test='${user.getGroupName() == "staff" || user.getGroupName() == "admin"}'>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${row.doctor_id}" target="_blank">
+                                assign                            
+                            </a>
+                        </td>
+                    </c:if>
+                    <c:if test='${user.getGroupName() == "admin"}'>
                         <td>
                             <a id="edit-doctor-${row.doctor_id}" data-doctor-id="${row.doctor_id}" href="#">
                                 what is this?
