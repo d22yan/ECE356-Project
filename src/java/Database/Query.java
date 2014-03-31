@@ -122,7 +122,6 @@ public class Query {
                     "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date, "+
                 "assigned_patient.doctor_id  "+
             "FROM  "+
-                "doctor,  "+
                 "patient  "+
             "LEFT JOIN  "+
                 "assigned_patient  "+
@@ -140,7 +139,9 @@ public class Query {
                     ") AS patient_record_last_visit_date "+
             "ON "+
                     "patient_record_last_visit_date.patient_id = patient.patient_id "+
-            "WHERE  "+
+            "LEFT JOIN " +
+                "doctor " +
+            "ON " +
                 "patient.default_doctor_id = doctor.doctor_id; ";
     }
     
