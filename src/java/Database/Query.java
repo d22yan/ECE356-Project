@@ -223,7 +223,7 @@ public class Query {
                 "test2 " +
             "ON " +
                 "appointment.patient_id = test2.patient_id " +
-            "RIGHT JOIN " +
+            "JOIN " +
                 "(SELECT " +
                     "* " +
                 "FROM " +
@@ -405,6 +405,20 @@ public class Query {
                 "doctor.doctor_id = patient_record.doctor_id AND  " +
                 "patient.patient_id = patient_record.patient_id AND  " +
                 "patient_record.patient_id = " + patientId + "; ";
+    }
+    
+    public static String modifyAppointment(int appointmentId, int doctorId, int patientId, String startDate, String endDate)
+    {
+        return
+            "UPDATE " +
+                "ece356db_d22yan.appointment " +
+            "SET " +
+                "doctor_id = " + doctorId + ", " +
+                "patient_id = " + patientId + ", " +
+                "appointment_start_time = \"" + startDate + "\", " +
+                "appointment_end_time = \"" + endDate + "\" " +
+            "WHERE " +
+                "appointment.appointment_id = " + appointmentId + ";";
     }
 
     public static String HistoryTable(String historyTable) {
