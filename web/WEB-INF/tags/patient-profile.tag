@@ -10,11 +10,24 @@
 <%@taglib tagdir="/WEB-INF/tags" prefix="patient-profile" %>
 
 <%
+    int patientId = 0;
     String patientProfileQuery = null;
     Model.User user = (Model.User) request.getSession().getAttribute("user");
+    
+    if (request.getParameter("patientId") != null) {
+        patientId = Integer.parseInt(request.getParameter("patientId"));
+    }
+    
     if(user != null) {
-         patientProfileQuery = "SELECT * FROM patient WHERE patient_id ="+user.getRoleId()+ ";";
-    }    
+        //for Patient editing their own profile
+        if(patientId >0 ) {
+           patientProfileQuery = "SELECT * FROM patient WHERE patient_id ="+patientId+ ";";
+        } 
+        //for staffs editing patient's profile
+        else {
+            patientProfileQuery = "SELECT * FROM patient WHERE patient_id ="+user.getRoleId()+ ";";
+        }   
+    }
 %>
 
 <html> 
@@ -253,6 +266,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.USER_ACCOUNT_PASSWORD%>,
                         tableType:"<%=Database.UpdateQueries.USER_ACCOUNT_TABLE_NAME%>",
+                        patientId:"<%=patientId%>",
                         updateValue:$('#password').val()},
                 success : function(data){
                     location.reload(true);
@@ -276,6 +290,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_ADDRESS%>,
                         tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                        patientId:"<%=patientId%>",
                         updateValue:$('#address').val()},
                 success : function(data){
                     location.reload(true);
@@ -299,6 +314,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_PHONENUMB%>,
                         tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                        patientId:"<%=patientId%>",
                         updateValue:$('#phone_number').val()},
                 success : function(data){
                     location.reload(true);
@@ -322,6 +338,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_HEALTHCARD%>,
                         tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                        patientId:"<%=patientId%>",
                         updateValue:$('#health_card').val()},
                 success : function(data){
                     location.reload(true);
@@ -345,6 +362,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_SINCARD%>,
                         tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                        patientId:"<%=patientId%>",
                         updateValue:$('#SIN').val()},
                 success : function(data){
                     location.reload(true);
@@ -370,6 +388,7 @@
                     url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                     data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_NAME%>,
                             tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                            patientId:"<%=patientId%>",
                             updateValue:$('#first-name').val() +" "+ $('#last-name').val()},
                     success : function(data){
                         location.reload(true);

@@ -110,7 +110,7 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-patient-${row.patient_id}" data-patient-id="${row.patient_id}" href="#">
+                            <a id="edit-patient-${row.patient_id}" data-patient-id="${row.patient_id}">
                                 edit
                             </a>
                         </td>
@@ -121,6 +121,8 @@
         </table>
         <script type="text/javascript">
             var isCurrentPatient = false;
+            
+            
 
             $(document).ready(function() {
                 clearSearchFilter();
@@ -131,7 +133,7 @@
                 
                 $('[id^="edit-patient"]').click(function(e){
                     e.stopPropagation();
-                    alert("<!--TODO direct to patient page-->");
+                    var win = window.open('${pageContext.request.contextPath}/updatePatient.jsp?patientId=' + $(this).data('patient-id'), '_blank');
                 });
 
                 $('#patient-table > tbody > tr[id^="patient-"]').click(function(e){
