@@ -9,6 +9,8 @@ import Model.User;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -252,5 +254,282 @@ public class Manager {
             }
         }
         return 0;
+    }
+    
+    public static void clearAssignedPatient(int doctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("DELETE FROM assigned_patient WHERE doctor_id=" + doctorId + ";");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    public static void addAssignedPatient(int doctorId, int patientId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("INSERT INTO assigned_patient(doctor_id, patient_id) VALUES(" + doctorId + "," + patientId + ");");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static void resetGrantStaff(int doctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("UPDATE assigned_staff SET view_patient_permission = 0 WHERE doctor_id = " + doctorId + ";");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static void grantStaffPermission(int doctorId, int staffId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("UPDATE assigned_staff SET view_patient_permission = 1 WHERE doctor_id = " + doctorId + " AND staff_id = " + staffId + ";");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static ResultSet getAssignedStaff(int doctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            return statement.executeQuery("SELECT * FROM assigned_staff WHERE doctor_id = " + doctorId + ";");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return null;
+    }
+    
+    public static void clearAssignedStaff(int doctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("DELETE FROM assigned_staff WHERE doctor_id=" + doctorId + ";");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    public static void addAssignedStaff(int doctorId, int staffId, boolean viewPatientPermission) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("INSERT INTO assigned_staff(doctor_id, staff_id, view_patient_permission) VALUES(" + doctorId + ", " + staffId + ", " + viewPatientPermission + ");");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static List<String> getGrantDoctorPatient(int granterDoctorId, int granteeDoctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        List<String> patientIdList = new ArrayList();
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet patientIdSet = statement.executeQuery("SELECT * FROM grant_permission WHERE granter_doctor_id = " + granterDoctorId + " AND grantee_doctor_id = " + granteeDoctorId + " ;");
+            while (patientIdSet.next()) {
+                patientIdList.add(patientIdSet.getString("patient_id"));
+            }
+            return patientIdList;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void clearGrantDoctor(int granterDoctorId, int granteeDoctorId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("DELETE FROM grant_permission WHERE granter_doctor_id = " + granterDoctorId + " AND grantee_doctor_id = " + granteeDoctorId + " ;");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static void grantDoctorPatient(int granterDoctorId, int granteeDoctorId, int patientId) {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate("INSERT INTO grant_permission(granter_doctor_id, grantee_doctor_id, patient_id) VALUES(" + granterDoctorId + ", " + granteeDoctorId + ", " + patientId + ");");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 }

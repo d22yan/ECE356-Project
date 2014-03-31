@@ -24,12 +24,8 @@
 <html>
     <c:if test='${user != null}'>
         <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
             #appointment-table > tbody > tr[id^="appointment-"]:hover {
-                background: #DDDDDD;
+                cursor: pointer;
                 cursor: pointer;
             }
         </style>
@@ -51,7 +47,36 @@
                 </sql:query>
             </c:when>
         </c:choose>
-        <table id="appointment-table" class="table">
+        <form id="appointment-searchbar" class="form-inline clearfix" style="padding: 10px">
+            <div id="search-option" class="searchbar">
+                <select class="form-control">
+                    <option value="appointment-id" selected="selected" data-type="int">appointment id</option>
+                    <option value="doctor-name" data-type="string">doctor name</option>
+                    <option value="patient-name" data-type="string">patient name</option>
+                    <option value="start-time" data-type="date">start time</option>
+                    <option value="end-time" data-type="date">end time</option>
+                </select> 
+            </div>
+            <div id="search-single" class="searchbar" style="width:200px" hidden>
+                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
+            </div>
+            <div id="search-range" class="form-inline searchbar" style="width:500px">
+                <div class="input-group date" style="float:left;padding-right:5px; width:200px">
+                    <input id="search-min" class="form-control" type="search" placeholder="min"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="input-group date" style="width:200px">
+                    <input id="search-max" class="form-control" type="search" placeholder="max"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+        <table id="appointment-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
                     <th>appointment id</th>
@@ -59,6 +84,9 @@
                     <th>patient name</th>
                     <th>start time</th>
                     <th>end time</th>
+                    <c:if test='${user.getGroupName() == "staff"}'>
+                        <th>edit</th>
+                    </c:if>
                 </tr>
             </thead>
             <tbody>
@@ -72,10 +100,10 @@
                         <td class="appointment-id">
                             <c:out value="${row.appointment_id}"/>
                         </td>
-                        <td class="doctor-name">
+                    <td class="doctor-name">
                             <c:out value="${row.doctor_name}"/>
                         </td>
-                        <td class="patient-name">
+                    <td class="patient-name">
                             <c:out value="${row.patient_name}"/>
                         </td>
                         <td class="start-time">
@@ -86,30 +114,114 @@
                         </td>
                         <c:if test='${user.getGroupName() == "staff"}'>
                             <td>
-                                <a id="edit-appointment-${row.appointment_id}" data-appointment-id="${row.appointment_id}" href="#">
-                                    what is this?
-                                </a>
+                            <button id="edit-appointment-${row.appointment_id}" class="btn btn-primary btn-xs" data-appointment-id="${row.appointment_id}" href="#">
+                                edit
+                            </button>
                             </td>
                         </c:if>
-                    </tr>
+                </tr>
                 </c:forEach>
             </tbody>
         </table>
+        </div>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('[id^="edit-appointment"]').click(function(e){
                     alert("<!--TODO direct to appointment page-->");
                 });
-            });
-            
-            $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
-                if ( ${user.getGroupName() == "staff"} )
-                {
-                    var win = window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
+                
+                $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
+                    if ( ${user.getGroupName() == "staff"} )
+                    {
+                        window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
                                                                                                 'doctorId=' + $(this).data('doctor-id') + '&' +
                                                                                                 'patientId=' + $(this).data('patient-id') + '&' +
                                                                                                 'startTime=' + $(this).data('start-time') + '&' +
                                                                                                  'endTime=' + $(this).data('end-time'), '_blank');
+                    }
+                });
+                
+                $(function(){
+                    $("#appointment-table").tablesorter();
+                });
+                
+                clearSearchFilter();
+
+                $('#appointment-searchbar #search-range .input-group').datetimepicker();
+
+                $('#appointment-searchbar #search-option').change(function() {
+                    if ($(this).find(':selected').data('type') == 'string') {
+                        $('#appointment-searchbar #search-single').show();
+                        $('#appointment-searchbar #search-range').hide();
+                        $('#appointment-searchbar #search-single .form-control').val('');
+                        searchFilter();
+                    } else {
+                        $('#appointment-searchbar #search-single').hide();
+                        $('#appointment-searchbar #search-range').show();
+                        $('#appointment-searchbar #search-range .form-control').val('');
+                        searchRangeFilter();
+                    }
+                });
+
+                $('#appointment-searchbar #search-input').on('input', function(e) {
+                    searchFilter();
+                });
+
+                $('#appointment-searchbar #search-range .form-control').on('input', function(e) {
+                    searchRangeFilter();
+                });
+
+                $('#appointment-searchbar #search-range .date').on('dp.change', function(e) {
+                    searchRangeFilter();
+                });
+
+                function clearSearchFilter() {
+                    $('#appointment-searchbar #search-input').val('');
+                    $('#appointment-searchbar #search-range #search-min, #appointment-searchbar #search-range #search-max').val('');
+                }
+
+                function searchFilter() {
+                    var searchInput = $.trim($('#appointment-searchbar #search-input').val().toLowerCase());
+                    var option = $('#appointment-searchbar #search-option').find(':selected').val();
+                    $('#appointment-table tbody tr').each(function() {
+                        if ($.trim($(this).find('[class^="' + option + '"]').text().toLowerCase()).indexOf(searchInput) == -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                }
+                
+                function searchRangeFilter() {
+                    var valueType = $('#appointment-searchbar #search-option').find(':selected').data('type');
+                    var option = $('#appointment-searchbar #search-option').find(':selected').val();
+                    
+                    var searchMin, searchMax, parseValue;
+                    switch (valueType) {
+                        case "int": 
+                            searchMin = parseInt($.trim($('#appointment-searchbar #search-min').val()));
+                            searchMax = parseInt($.trim($('#appointment-searchbar #search-max').val()));
+                            parseValue = function(value) { 
+                                return !isNaN(parseInt(value)) ? parseInt(value) : null; 
+                            };
+                            break;
+                        case "date":
+                            searchMin = moment($.trim($('#appointment-searchbar #search-min').val()));
+                            searchMax = moment($.trim($('#appointment-searchbar #search-max').val()));
+                            parseValue = function(value) {
+                                return moment(value).isValid() ? moment(value) : null;
+                            };
+                            break;
+                    }
+                        
+                    $('#appointment-table tbody tr').each(function() {
+                        var testValue = parseValue($.trim($(this).find('[class^="' + option + '"]').text()));
+                        if (testValue == null || testValue < searchMin || testValue > searchMax) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
                 }
             });
         </script>

@@ -82,16 +82,20 @@ public class UserInfoUpdateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        int patientId       =0;
         String  tableType   = request.getParameter("tableType");
         int     type        = Integer.parseInt(request.getParameter("type"));
         String  updateValue = request.getParameter("updateValue");
         User    user        = (User) request.getSession().getAttribute("user");
         
+        
+        patientId   = Integer.parseInt(request.getParameter("patientId"))>0?
+                        Integer.parseInt(request.getParameter("patientId")) : user.getRoleId();
+        
         try {
             PreparedStatement ps = UpdateQueries.getPreparedStatement(request, tableType, type);
             ps.setString(1, updateValue);
-            ps.setInt(2, user.getRoleId());
+            ps.setInt(2, patientId);
             ps.executeUpdate();
             ps.close();
         } catch (ClassNotFoundException ex) {
