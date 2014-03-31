@@ -415,4 +415,50 @@ public class Query {
             "FROM " +
                 historyTable + " ; ";
     }
+
+    public static String DoctorAssignedStaff(int doctorId) {
+        return
+            "SELECT " +
+                "staff.staff_id, " +
+                "staff.staff_name, " +
+                "assigned_staff.doctor_id " +
+            "FROM  " +
+                "staff " +
+            "LEFT JOIN " +
+                "assigned_staff  " +
+            "ON  " +
+                "staff.staff_id = assigned_staff.staff_id AND " +
+                "assigned_staff.doctor_id = " + doctorId + "; ";
+    }
+
+    public static String DoctorAssignedPatient(int doctorId) {
+        return
+            "SELECT  " +
+                "patient.patient_id, " +
+                "patient.patient_name, " +
+                "assigned_patient.doctor_id " +
+            "FROM " +
+                "patient " +
+            "LEFT JOIN  " +
+                "assigned_patient " +
+            "ON " +
+                "patient.patient_id = assigned_patient.patient_id AND " +
+                "assigned_patient.doctor_id = " + doctorId + "; ";
+    }
+
+    public static String DoctorGrantedStaff(int doctorId) {
+        return
+            "SELECT    " +
+                "staff.staff_id, " +
+                "staff.staff_name, " +
+                "assigned_staff.view_patient_permission " +
+            "FROM   " +
+                "assigned_staff, " +
+                "staff   " +
+            "WHERE  " +
+                "staff.staff_id = assigned_staff.staff_id AND " +
+                "assigned_staff.doctor_id = " + doctorId + "; ";
+    }
+
 }
+
