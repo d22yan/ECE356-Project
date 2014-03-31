@@ -26,13 +26,7 @@
 <html>
     <c:if test='${user != null}'>
         <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
-            
             #patient-table > tbody > tr[id^="patient-"]:hover {
-                background: #DDDDDD;
                 cursor: pointer;
             }
         </style>
@@ -45,7 +39,7 @@
         <sql:query dataSource="${connection}" var="patientList">
             <%=patientQuery%>
         </sql:query>
-        <form class="form-inline clearfix" style="padding: 10px">
+        <form id="patient-searchbar" class="form-inline clearfix" style="padding: 10px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
                     <option value="patient-name" selected="selected" data-type="string">patient name</option>
@@ -81,13 +75,17 @@
                 </a>
             </c:if>
         </form>
-        <table id="patient-table" class="table">
+        <div class="table-responsive">
+        <table id="patient-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
-                    <th>patient</th>
-                    <th>patient #</th>
+                    <th>patient name</th>
+                    <th>patient id</th>
                     <th>default doctor</th>
                     <th>last visit date</th>
+                    <c:if test='${user.getGroupName() == "staff"}'>
+                        <th>edit</th>
+                    </c:if>
                 </tr>
             </thead>
             <tbody>
@@ -110,29 +108,27 @@
                     </td>
                     <c:if test='${user.getGroupName() == "staff"}'>
                         <td>
-                            <a id="edit-patient-${row.patient_id}" data-patient-id="${row.patient_id}">
+                            <button type="button" id="edit-patient-${row.patient_id}" class="btn btn-primary btn-xs" data-patient-id="${row.patient_id}">
                                 edit
-                            </a>
+                            </button>
                         </td>
                     </c:if>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
+        </div>
         <script type="text/javascript">
             var isCurrentPatient = false;
             
-            
-
             $(document).ready(function() {
                 $(function(){
                     $("#patient-table").tablesorter();
                 });
                 clearSearchFilter();
                 toggleCurrentPatient(true);
-                $('#search-option option[value="patient-record-id"]').prop('selected', true);
 
-                $('#search-range .input-group').datetimepicker({ pickTime: false });
+                $('#patient-searchbar #search-range .input-group').datetimepicker({ pickTime: false });
                 
                 $('[id^="edit-patient"]').click(function(e){
                     e.stopPropagation();
@@ -143,45 +139,45 @@
                     var win = window.open('${pageContext.request.contextPath}/patientRecord.jsp?patientId=' + $(this).data('patient-id'), '_blank');
                 });
 
-                $('#search-option').change(function() {
+                $('#patient-searchbar #search-option').change(function() {
                     if ($(this).find(':selected').data('type') == 'string') {
-                        $('#search-single').show();
-                        $('#search-range').hide();
-                        $('#search-single .form-control').val('');
+                        $('#patient-searchbar #search-single').show();
+                        $('#patient-searchbar #search-range').hide();
+                        $('#patient-searchbar #search-single .form-control').val('');
                         searchFilter();
                     } else {
-                        $('#search-single').hide();
-                        $('#search-range').show();
-                        $('#search-range .form-control').val('');
+                        $('#patient-searchbar #search-single').hide();
+                        $('#patient-searchbar #search-range').show();
+                        $('#patient-searchbar #search-range .form-control').val('');
                         searchRangeFilter();
                     }
                 });
 
-                $('#search-input').on('input', function(e) {
+                $('#patient-searchbar #search-input').on('input', function(e) {
                     searchFilter();
                 });
 
-                $('#search-range .form-control').on('input', function(e) {
+                $('#patient-searchbar #search-range .form-control').on('input', function(e) {
                     searchRangeFilter();
                 });
 
-                $('#search-range .date').on('dp.change', function(e) {
+                $('#patient-searchbar #search-range .date').on('dp.change', function(e) {
                     searchRangeFilter();
                 });
 
-                $('#view-all').click(function() {
+                $('#patient-searchbar #view-all').click(function() {
                     isCurrentPatient = false;
                     toggleCurrentPatient(true);
                     $('#patient-table tbody tr').show();
                     
-                    if ($('#search-option').find(':selected').data('type') == 'string') {
+                    if ($('#patient-searchbar #search-option').find(':selected').data('type') == 'string') {
                         searchFilter();
                     } else {
                         searchRangeFilter();
                     }
                 });
 
-                $('#view-current').click(function() {
+                $('#patient-searchbar #view-current').click(function() {
                     isCurrentPatient = true;
                     toggleCurrentPatient(false);
                     $('#patient-table tbody tr').each(function() {
@@ -190,7 +186,7 @@
                         }
                     });
                     
-                    if ($('#search-option').find(':selected').data('type') == 'string') {
+                    if ($('#patient-searchbar #search-option').find(':selected').data('type') == 'string') {
                         searchFilter();
                     } else {
                         searchRangeFilter();
@@ -198,13 +194,13 @@
                 });
 
                 function clearSearchFilter() {
-                    $('#search-input').val('');
-                    $('#search-range #searchMin, #search-range #searchMax').val('');
+                    $('#patient-searchbar #search-input').val('');
+                    $('#patient-searchbar #search-range #search-min, #patient-searchbar #search-range #search-max').val('');
                 }
 
                 function searchFilter() {
-                    var searchInput = $('#search-input').val().toLowerCase().replace(/\s/g, '');
-                    var option = $('#search-option').find(':selected').val();
+                    var searchInput = $('#patient-searchbar #search-input').val().toLowerCase().replace(/\s/g, '');
+                    var option = $('#patient-searchbar #search-option').find(':selected').val();
                     $('#patient-table tbody tr').each(function() {
                         if ($(this).find('[class^="' + option + '"]').text().toLowerCase().replace(/\s/g, '').indexOf(searchInput) == -1 || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
                             $(this).hide();
@@ -215,21 +211,21 @@
                 }
                 
                 function searchRangeFilter() {
-                    var valueType = $('#search-option').find(':selected').data('type');
-                    var option = $('#search-option').find(':selected').val();
+                    var valueType = $('#patient-searchbar #search-option').find(':selected').data('type');
+                    var option = $('#patient-searchbar #search-option').find(':selected').val();
                     
                     var searchMin, searchMax, parseValue;
                     switch (valueType) {
                         case "int": 
-                            searchMin = parseInt($('#search-min').val().replace(/\s/g, ''));
-                            searchMax = parseInt($('#search-max').val().replace(/\s/g, ''));
+                            searchMin = parseInt($('#patient-searchbar #search-min').val().replace(/\s/g, ''));
+                            searchMax = parseInt($('#patient-searchbar #search-max').val().replace(/\s/g, ''));
                             parseValue = function(value) { 
                                 return !isNaN(parseInt(value)) ? parseInt(value) : null; 
                             };
                             break;
                         case "date":
-                            searchMin = moment($('#search-min').val().replace(/\s/g, ''));
-                            searchMax = moment($('#search-max').val().replace(/\s/g, ''));
+                            searchMin = moment($('#patient-searchbar #search-min').val().replace(/\s/g, ''));
+                            searchMax = moment($('#patient-searchbar #search-max').val().replace(/\s/g, ''));
                             parseValue = function(value) {
                                 return moment(value).isValid() ? moment(value) : null;
                             };
@@ -247,11 +243,11 @@
                 }
                 function toggleCurrentPatient(showCurrentButton) {
                     if (showCurrentButton) {
-                        $('#view-all').hide();
-                        $('#view-current').show();
+                        $('#patient-searchbar #view-all').hide();
+                        $('#patient-searchbar #view-current').show();
                     } else {
-                        $('#view-all').show();
-                        $('#view-current').hide();
+                        $('#patient-searchbar #view-all').show();
+                        $('#patient-searchbar #view-current').hide();
                     }
                 }
             });

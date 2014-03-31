@@ -105,10 +105,14 @@
                         <jsp:doBody/>
                     </c:when>
                     <c:otherwise>
-                        <ul class="nav nav-tabs">
-                        </ul>
-                        <div class="tab-content">
-                            <jsp:doBody/>
+                        <div class="row">
+                            <ul class="nav nav-tabs">
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <div class="tab-content">
+                                <jsp:doBody/>
+                            </div>
                         </div>
                     </c:otherwise>
                 </c:choose>

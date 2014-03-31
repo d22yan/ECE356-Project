@@ -40,14 +40,8 @@
 <html>
     <c:if test='${user != null}'>
         <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
-            
             #patient-record-table > tbody > tr[id^="patient-record"]:hover,
             #patient-record-table > tbody > tr[id="add-patient-record"]:hover {
-                background: #DDDDDD;
                 cursor: pointer;
             }
         </style>
@@ -124,7 +118,8 @@
                 </div>
             </div>
         </div>
-        <table id="patient-record-table" class="table">
+        <div class="table-responsive">
+        <table id="patient-record-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
                     <th>record id</th>
@@ -241,6 +236,7 @@
                 </c:if>
             </tbody>
         </table>
+        </div>
         <script type="text/javascript">
             if (<%=patientId%> == 0) {
                 document.getElementById("patient-record-search-bar").style.display = "none";
