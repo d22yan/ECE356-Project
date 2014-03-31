@@ -130,7 +130,6 @@
                 });
                 clearSearchFilter();
                 toggleCurrentPatient(true);
-                $('#patient-searchbar #search-option option[value="patient-record-id"]').prop('selected', true);
 
                 $('#patient-searchbar #search-range .input-group').datetimepicker({ pickTime: false });
                 
@@ -199,7 +198,7 @@
 
                 function clearSearchFilter() {
                     $('#patient-searchbar #search-input').val('');
-                    $('#patient-searchbar #search-range #searchMin, #patient-searchbar #search-range #searchMax').val('');
+                    $('#patient-searchbar #search-range #search-min, #patient-searchbar #search-range #search-max').val('');
                 }
 
                 function searchFilter() {
