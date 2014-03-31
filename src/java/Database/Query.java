@@ -146,43 +146,44 @@ public class Query {
     
     public static String StaffPatientList(int staffId) {
         return
-            "SELECT  " +
-                "patient.patient_id,  " +
-                "patient.patient_name,  " +
-                "doctor.doctor_name, " +
-                "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date, " +
-                "assigned_staff_to_assigned_patient.staff_id " +
-            "FROM  " +
-                "doctor,  " +
-                "patient  " +
+            "SELECT   " +
+                "patient.patient_id,   " +
+                "patient.patient_name,   " +
+                "doctor.doctor_name,  " +
+                "date_format(date(patient_record_last_visit_date.last_visit_date),'%m/%d/%Y') as last_visit_date,  " +
+                "assigned_staff_to_assigned_patient.staff_id  " +
+            "FROM    " +
+                "patient   " +
+            "LEFT JOIN   " +
+                "(  SELECT  " +
+                                    "assigned_patient.patient_id,  " +
+                                    "assigned_patient.doctor_id,  " +
+                                    "assigned_staff.staff_id  " +
+                            "FROM  " +
+                                    "assigned_staff,  " +
+                                    "doctor,  " +
+                                    "assigned_patient  " +
+                            "WHERE  " +
+                                    "assigned_patient.doctor_id = doctor.doctor_id AND  " +
+                                    "doctor.doctor_id = assigned_staff.doctor_id AND  " +
+                                    "assigned_staff.staff_id = 1 " +
+                    ") as assigned_staff_to_assigned_patient  " +
+            "ON   " +
+                "patient.patient_id = assigned_staff_to_assigned_patient.patient_id  " +
             "LEFT JOIN  " +
-                "(	SELECT " +
-                                    "assigned_patient.patient_id, " +
-                                    "assigned_patient.doctor_id, " +
-                                    "assigned_staff.staff_id " +
-                            "FROM " +
-                                    "assigned_staff, " +
-                                    "doctor, " +
-                                    "assigned_patient " +
-                            "WHERE " +
-                                    "assigned_patient.doctor_id = doctor.doctor_id AND " +
-                                    "doctor.doctor_id = assigned_staff.doctor_id AND " +
-                                    "assigned_staff.staff_id = " + staffId + " " +
-                    ") as assigned_staff_to_assigned_patient " +
+                    "(  SELECT  " +
+                                "patient_record.patient_id,  " +
+                                "max(patient_record.visit_start_time) AS last_visit_date  " +
+                        "FROM  " +
+                                "patient_record  " +
+                        "GROUP BY  " +
+                                "patient_record.patient_id  " +
+                    ") AS patient_record_last_visit_date  " +
             "ON  " +
-                "patient.patient_id = assigned_staff_to_assigned_patient.patient_id " +
+                    "patient_record_last_visit_date.patient_id = patient.patient_id  " +
             "LEFT JOIN " +
-                    "(	SELECT " +
-                                "patient_record.patient_id, " +
-                                "max(patient_record.visit_start_time) AS last_visit_date " +
-                        "FROM " +
-                                "patient_record " +
-                        "GROUP BY " +
-                                "patient_record.patient_id " +
-                    ") AS patient_record_last_visit_date " +
+                "doctor " +
             "ON " +
-                    "patient_record_last_visit_date.patient_id = patient.patient_id " +
-            "WHERE  " +
                 "patient.default_doctor_id = doctor.doctor_id; ";
     }
     public static String staffAppointmentList(int staffId) {
