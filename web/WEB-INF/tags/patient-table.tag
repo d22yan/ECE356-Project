@@ -42,7 +42,9 @@
         <form id="patient-searchbar" class="form-inline clearfix" style="padding: 10px">
             <div id="search-option" class="searchbar">
                 <select class="form-control">
-                    <option value="patient-name" selected="selected" data-type="string">patient name</option>
+                    <c:if test='${user.getGroupName() != "financial"}'>
+                        <option value="patient-name" selected="selected" data-type="string">patient name</option>
+                    </c:if>
                     <option value="patient-id" data-type="int">patient id</option>
                     <option value="default-doctor-name" data-type="string">default doctor name</option>
                     <option value="last-visit-date" data-type="date">last visit date</option>
@@ -79,7 +81,9 @@
         <table id="patient-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
-                    <th>patient name</th>
+                    <c:if test='${user.getGroupName() != "financial"}'>
+                        <th>patient name</th>
+                    </c:if>
                     <th>patient id</th>
                     <th>default doctor</th>
                     <th>last visit date</th>
@@ -94,9 +98,11 @@
                     id="patient-${row.patient_id}" 
                     data-patient-id="${row.patient_id}" 
                     data-is-current-patient="${(user.getGroupName() == "doctor" && row.doctor_id == user.getRoleId()) || (user.getGroupName() == "staff" && row.staff_id == user.getRoleId()) ? true : false}">
-                    <td class="patient-name">
-                        <c:out value="${row.patient_name}"/>
-                    </td>
+                    <c:if test='${user.getGroupName() != "financial"}'>
+                        <td class="patient-name">
+                            <c:out value="${row.patient_name}"/>
+                        </td>
+                    </c:if>
                     <td class="patient-id">
                         <c:out value="${row.patient_id}"/>
                     </td>
