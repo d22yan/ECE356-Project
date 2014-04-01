@@ -96,7 +96,6 @@ public class Query {
                 "doctor.doctor_name, " +
                 "patient_record_last_visit_date.last_visit_date " + 
             "FROM  " +
-                "doctor,  " +
                 "patient  " +
             "LEFT JOIN " +
                     "(	SELECT " +
@@ -109,7 +108,9 @@ public class Query {
                     ") AS patient_record_last_visit_date " +
             "ON " +
                     "patient_record_last_visit_date.patient_id = patient.patient_id " +
-            "WHERE  " +
+            "LEFT JOIN " +
+                "doctor " +
+            "ON " +
                 "patient.default_doctor_id = doctor.doctor_id " +
             "ORDER BY " +
                 "patient.patient_name; ";
