@@ -21,11 +21,11 @@
     if(user != null) {
         //for Patient editing their own profile
         if(patientId >0 ) {
-           patientProfileQuery = "SELECT * FROM patient WHERE patient_id ="+patientId+ ";";
+           patientProfileQuery = "SELECT * FROM doctor, patient WHERE patient.default_doctor_id = doctor.doctor_id AND patient.patient_id ="+patientId+ ";";
         } 
         //for staffs editing patient's profile
         else {
-            patientProfileQuery = "SELECT * FROM patient WHERE patient_id ="+user.getRoleId()+ ";";
+            patientProfileQuery = "SELECT * FROM doctor, patient WHERE patient.default_doctor_id = doctor.doctor_id AND patient.patient_id ="+user.getRoleId()+ ";";
         }   
     }
 %>
@@ -47,6 +47,14 @@
                 SELECT username FROM user_account WHERE role_id = ${param.patientId} AND group_name = "patient";
             </sql:query>
         </c:if>
+        <sql:query dataSource="${connection}" var="doctorList">
+            SELECT
+                *
+            FROM
+                doctor
+            ORDER BY
+                doctor.doctor_name;
+        </sql:query>
             
         <div class="container">
         <h3>Patient Information</h3></br>
@@ -221,6 +229,40 @@
                     <button type="button" id="nameButton" class="btn btn-primary btn-sm" onclick="updateSIN()">Save change</button>
                 </td>
             </tr>
+
+            <c:if test='${user.getGroupName() == "staff"}'>
+                <tr id="editDefaultDoctor">
+                    <td>Default Doctor:</td>
+                    <td>
+                        <c:forEach var="row" items="${patientProfile.rows}">
+                            <c:out value="${row.doctor_name}"></c:out>
+                        </c:forEach>
+                    </td>
+                    <td class="text-right"><p class="text-primary">Edit</p></td>
+                </tr> 
+                <tr class="edit-DefaultDoctor table-row bg-warning" style="display:none;">
+                    <td  class="col-md-5" >
+                        <form class="form-inline" role="form">
+                        <div class="form-group">       
+                            <label class="text-primary small" for="DefaultDoctor">Default Doctor </label> 
+                            <select id="DefaultDoctor" class="multiselect">
+                                <c:forEach items="${doctorList.rows}" var="row2">
+                                    <option value="${row2.doctor_id}">
+                                        <c:out value="${row2.doctor_name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        </form>
+                    </td>
+                    <td class="col-md-5"> 
+                    </td>
+                    <td class="button-right col-md-2">
+                        <button type="button" id="nameButton" class="btn btn-primary btn-sm" onclick="updateDefaultDoctor()">Save change</button>
+                    </td>
+                </tr>
+            </c:if>
+
             <tr id="editHealthStatus">
                 <td>Health Status:</td>
                 <td>
@@ -260,6 +302,11 @@
 
 <script>
     $(document).ready(function() {
+        $('.multiselect').multiselect({
+            buttonClass: 'btn btn-default btn-sm',
+            buttonWidth: '200px',
+            enableFiltering: true
+        });
         $("#editName").click(function(){
                 if(!$("#first-name").is(':visible')) {
                     $("#first-name").val('');
@@ -300,6 +347,12 @@
                 $("#SIN").val('');               
             }
             $('.edit-SIN').animate({height: "toggle", opacity:"toggle" }, 'medium');
+        }); 
+        $("#editDefaultDoctor").click(function(){
+            if(!$("#DefaultDoctor").is(':visible')) {
+                $("#DefaultDoctor").val('');               
+            }
+            $('.edit-DefaultDoctor').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
         $("#editHealthStatus").click(function(){
             if(!$("#health-status").is(':visible')) {
@@ -491,6 +544,23 @@
                         $('#last-name').parent().prev().css('color', 'black');
                         $('#last-name').css('border-color', '#ccc');
                 }
-        }	
+        }
+    }
+
+    function updateDefaultDoctor() {
+         $.ajax({
+            type: "POST",
+            url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
+            data: { type:<%=Database.UpdateQueries.PATIENT_UPDATE_DEFAULTDOCTORID%>,
+                    tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                    patientId:"<%=patientId%>",
+                    updateValue:$("#DefaultDoctor").val()},
+            success : function(data){
+                location.reload(true);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(jqXHR+" - "+textStatus+" - "+errorThrown);
+            }  
+        });
     }
 </script>
