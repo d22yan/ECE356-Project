@@ -49,6 +49,7 @@ public class LoginServlet extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.getSession().setAttribute("user", null);
+            request.getSession().setAttribute("errorMsg", "Login Error");
             response.sendRedirect(""); //redirect to root
         } catch (SQLException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
