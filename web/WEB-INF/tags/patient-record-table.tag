@@ -12,6 +12,8 @@
     int doctorId = 0;
     int staffId = 0;
     int patientId = 0;
+    int financialDoctorId = 0;
+    String groupName = null;
     String patientRecordQuery = null;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     Model.User user = null;
@@ -20,19 +22,25 @@
     }
     if (request.getSession().getAttribute("user") != null) {
         user = (Model.User) request.getSession().getAttribute("user");
-        if (user.getGroupName().equals("doctor")) {
+        groupName = user.getGroupName();
+        if (groupName.equals("doctor")) {
             doctorId = user.getRoleId();
             if (patientId == 0) {
                 patientRecordQuery = Database.Query.PatientRecordByDoctor(doctorId);
             } else {
                 patientRecordQuery = Database.Query.DoctorPatientRecord(doctorId, patientId);
             }
-        } else if (user.getGroupName().equals("staff")) {
+        } else if (groupName.equals("staff")) {
             staffId = user.getRoleId();
             patientRecordQuery = Database.Query.StaffPatientRecord(staffId, patientId);
-        } else if (user.getGroupName().equals("patient")) {
+        } else if (groupName.equals("patient")) {
             patientId = user.getRoleId();
             patientRecordQuery = Database.Query.PatientRecord(patientId);
+        } else if (groupName.equals("financial")) {
+            if (request.getParameter("doctorId") != null) {
+                financialDoctorId = Integer.parseInt(request.getParameter("doctorId"));
+            }
+            patientRecordQuery = Database.Query.PatientRecordByDoctor(financialDoctorId);
         }
     }
 %>
@@ -243,7 +251,7 @@
         </table>
         </div>
         <script type="text/javascript">
-            if(<%=patientId%> == 0) {
+            if(<%=patientId%> == 0 && <%=doctorId%> > 0) {
                 document.getElementById('add-patient-record').style.display = "none";
             }
             $(document).ready(function() {

@@ -68,6 +68,13 @@
                     <td class="doctor-name">
                         <c:out value="${row.doctor_name}"/>
                     </td>
+                    <c:if test='${user.getGroupName() == "financial"}'>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/patientRecord.jsp?patientId=0&doctorId=${row.doctor_id}" target="_blank">
+                                patient record summary
+                            </a>
+                        </td>
+                    </c:if>
                     <c:if test='${user.getGroupName() == "staff" || user.getGroupName() == "admin"}'>
                         <td>
                             <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${row.doctor_id}" target="_blank">
