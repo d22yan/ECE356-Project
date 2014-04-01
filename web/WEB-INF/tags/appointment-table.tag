@@ -75,7 +75,7 @@
             </div>
             <div>
             <c:if test="${user.groupName == 'staff'}">
-            <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-danger" role="button">
+            <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-primary" role="button">
                 Create Appointment
             </a>
             </c:if>    
@@ -91,8 +91,8 @@
                     <th>patient name</th>
                     <th>start time</th>
                     <th>end time</th>
-                    <c:if test='${user.getGroupName() == "staff"}'>
-                        <th>edit</th>
+                    <c:if test="${user.groupName == 'staff'}">
+                    <th>delete</th>
                     </c:if>
                 </tr>
             </thead>
@@ -119,18 +119,7 @@
                         <td class="end-time">
                             <c:out value="${row.appointment_end_time}"/>
                         </td>
-                        <c:if test='${user.getGroupName() == "staff"}'>
-                            <td>
-                            <button id="edit-appointment-${row.appointment_id}" 
-                                    data-appointment-id = "${row.appointment_id}" 
-                                    data-doctor-id = "${row.doctor_id}" 
-                                    data-patient-id = "${row.patient_id}"
-                                    data-start-time = "${row.appointment_start_time}"
-                                    data-end-time="${row.appointment_end_time}"
-                                    class="btn btn-primary btn-xs" data-appointment-id="${row.appointment_id}" href="#">
-                                edit
-                            </button>
-                            </td>
+                        <c:if test="${user.groupName == 'staff'}">
                             <td>
                             <button id="delete-appointment-${row.appointment_id}" class="btn btn-danger btn-xs" data-appointment-id="${row.appointment_id}" href="#">
                                 delete
@@ -144,7 +133,7 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
-                $('[id^="edit-appointment"]').click(function(e){
+                $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
                     if ( ${user.getGroupName() == "staff"} )
                     {
                         window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
@@ -175,12 +164,12 @@
                 });
                 
                 $(function(){
-                    $("#appointment-table").tablesorter();
+                    $('#appointment-table').tablesorter();
                 });
                 
                 clearSearchFilter();
 
-                $('#appointment-searchbar #search-range .input-group').datetimepicker();
+                $('#appointment-searchbar #search-range .input-group').datetimepicker({});
 
                 $('#appointment-searchbar #search-option').change(function() {
                     if ($(this).find(':selected').data('type') == 'string') {

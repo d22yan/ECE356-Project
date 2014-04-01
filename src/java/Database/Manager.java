@@ -123,6 +123,26 @@ public class Manager {
             }
         }
     }
+    
+    public static String findRealName(String groupName, int roleId) 
+    throws ClassNotFoundException, SQLException {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet nameSet = statement.executeQuery(Database.Query.FindRealName(groupName, roleId));
+            return (!nameSet.first()) ? null : nameSet.getString(groupName + "_name");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conection != null) {
+                conection.close();
+            }
+        }
+
+    }
      
     public static void addPatientRecord(int doctorId, int patientId, String visitStartTime, String visitEndTime, String diagnosis, String prescription, String treatmentSchedule, String freeform)
             throws ClassNotFoundException, SQLException {

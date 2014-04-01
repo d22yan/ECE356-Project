@@ -60,8 +60,8 @@
         </sql:query>
         <c:if test='${user.getGroupName() == "staff"}'> 
             <form role="form" action="${pageContext.request.contextPath}/CreateAppointmentServlet" method="post">
-                <p>Start Time:</p>
-                <select name="doctor">
+                <p>Doctor</p>
+                <select name="doctor" class="form-control">
                     <c:forEach var="row" items="${doctorInformation.rows}">
                         <option value="${row.doctor_id}">
                             <c:out value="${row.doctor_name}"/>
@@ -69,7 +69,7 @@
                     </c:forEach>
                 </select>
                 <p>Patient:</p>
-                <select name="patient">
+                <select name="patient" class="form-control">
                     <c:forEach var="row" items="${patientInformation.rows}">
                             <option value="${row.patient_id}">
                                 <c:out value="${row.patient_name}"/>

@@ -12,20 +12,31 @@
         <!-- Example row of columns -->
         <div class="row">
           <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>description</p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+            <h2>Patients</h2>
+            <p>Please sign in to view your appointments, visitation records, and update your profile.</p>
+            <p>If you don't have an account yet, just ask any staff member and we'll set you up!</p>
           </div>
           <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>description</p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+            <h2>Doctors</h2>
+            <p>Please sign in to view your appointments, access patient information for your own patients, or grant permission to view your patients to other doctors.</p>
+            <p>If you have trouble accessing your account, ask the admin for help!</p>
          </div>
           <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>description</p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+            <h2>Staff</h2>
+            <p>Please sign in to schedule appointments, create patient accounts, view and update patient information, and assign patients to doctors.</p>
+            <p>If you have trouble accessing your account, ask the admin for help!</p>
           </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"><label for="username"><p><a class="btn btn-default" role="button">
+                    Sign in &raquo;
+                </a></p></label></div>
+            <div class="col-md-4"<label for="username"><p><a class="btn btn-default" role="button">
+                    Sign in &raquo;
+                </a></p></label></div>
+            <div class="col-md-4"><label for="username"><p><a class="btn btn-default" role="button">
+                    Sign in &raquo;
+                </a></p></label></div>
         </div>
     </jsp:body>
 </generic:page-template>
