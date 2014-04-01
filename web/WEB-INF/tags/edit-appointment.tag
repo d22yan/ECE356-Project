@@ -67,8 +67,8 @@
         <c:if test='${user.getGroupName() == "staff"}'> 
             <form role="form" action="${pageContext.request.contextPath}/EditAppointmentServlet" method="post">
                 <input type="hidden" name="appointmentId" value="${param.appointmentId}">
-                <p>Start Time:</p>
-                <select name="doctor">
+                <p>Doctor:</p>
+                <select name="doctor" class="form-control">
                     <c:forEach var="row" items="${doctorInformation.rows}">
                         <c:choose>
                             <c:when test='${param.doctorId == row.doctor_id}'>
@@ -85,7 +85,7 @@
                     </c:forEach>
                 </select>
                 <p>Patient:</p>
-                <select name="patient">
+                <select name="patient" class="form-control">
                     <c:forEach var="row" items="${patientInformation.rows}">
                         <c:choose>
                             <c:when test='${param.patientId == row.patient_id}'>

@@ -250,10 +250,9 @@
     </c:if>         
 </html>
 
-<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 <script>
-    $(function(){
-       $("#editName").click(function(){
+    $(document).ready(function() {
+        $("#editName").click(function(){
                 if(!$("#first-name").is(':visible')) {
                     $("#first-name").val('');
                     $("#last-name").val('');                

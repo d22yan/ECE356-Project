@@ -28,7 +28,7 @@
                 <generic:patient-table></generic:patient-table>
             </jsp:body>
         </generic:tab-template>
-        <generic:tab-template id="assign-tab" label="Assigns">
+        <generic:tab-template id="assign-tab" label="Grant Permission">
             <jsp:body>
                 <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${user.getRoleId()}" target="_blank">
                     go to assign
