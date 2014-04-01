@@ -65,7 +65,7 @@
                 doctor.doctor_id = test.doctor_id;
         </sql:query>
         <c:if test='${user.getGroupName() == "staff"}'> 
-            <form role="form" action="${pageContext.request.contextPath}/EditAppointmentServlet" method="post">
+            <form role="form" action="${pageContext.request.contextPath}/EditAppointmentServlet" method="post" class="form-standalone">
                 <input type="hidden" name="appointmentId" value="${param.appointmentId}">
                 <p>Doctor:</p>
                 <select name="doctor" class="form-control">

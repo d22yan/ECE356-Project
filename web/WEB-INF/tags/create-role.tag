@@ -14,7 +14,7 @@
 
 <html>
 	<c:if test='${user != null}'>
-		<div id="create-role-form">
+            <div id="create-role-form" class="form-standalone">
 			<div class="form-group">
 				<label for="select-role">role</label>
 				<select id="select-role" class="form-control">

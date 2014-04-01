@@ -14,7 +14,6 @@
                 <generic:user-information></generic:user-information>
             </jsp:body>
         </generic:tab-template>
-        
         <generic:tab-template id="appointment-tab" label="Appointments">
             <jsp:body>
                 <generic:appointment-table></generic:appointment-table>
@@ -22,16 +21,20 @@
         </generic:tab-template>
         <generic:tab-template id="patient-tab" label="Patients">
             <jsp:body>
-                <a href="${pageContext.request.contextPath}/patientRecord.jsp?patientId=0" target="_blank">
-                    view all patient records
-                </a>
                 <generic:patient-table></generic:patient-table>
+            </jsp:body>
+        </generic:tab-template>
+        <generic:tab-template id="patient-records-tab" label="Patient Records">
+            <jsp:body>
+                <a href="${pageContext.request.contextPath}/patientRecord.jsp?patientId=0" target="_blank" class="btn btn-primary btn-standalone">
+                    view my patient records
+                </a>
             </jsp:body>
         </generic:tab-template>
         <generic:tab-template id="assign-tab" label="Grant Permission">
             <jsp:body>
-                <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${user.getRoleId()}" target="_blank">
-                    go to assign
+                <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${user.getRoleId()}" target="_blank" class="btn btn-primary btn-standalone">
+                    go to permissions
                 </a>
             </jsp:body>
         </generic:tab-template>

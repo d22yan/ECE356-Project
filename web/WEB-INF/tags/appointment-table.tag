@@ -82,7 +82,7 @@
             </div>
             <div>
             <c:if test="${user.groupName == 'staff'}">
-            <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-primary" role="button">
+            <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-primary" role="button" class="btn btn-primary">
                 Create Appointment
             </a>
             </c:if>    

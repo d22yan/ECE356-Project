@@ -81,6 +81,16 @@
                 <tr>
                     <th>doctor id</th>
                     <th>doctor name</th>
+                    <c:if test='${user.getGroupName() == "financial"}'>
+                        <th>
+                            patient record summary
+                        </th>
+                    </c:if>
+                    <c:if test='${user.getGroupName() == "staff" || user.getGroupName() == "admin"}'>
+                        <th>
+                            assignment                           
+                        </th>
+                    </c:if>
                 </tr>
             </thead>
             <tbody>
@@ -94,14 +104,14 @@
                     </td>
                     <c:if test='${user.getGroupName() == "financial"}'>
                         <td>
-                            <a href="${pageContext.request.contextPath}/patientRecord.jsp?patientId=0&doctorId=${row.doctor_id}" target="_blank">
+                            <a href="${pageContext.request.contextPath}/patientRecord.jsp?patientId=0&doctorId=${row.doctor_id}" target="_blank" class="btn btn-xs btn-primary">
                                 patient record summary
                             </a>
                         </td>
                     </c:if>
                     <c:if test='${user.getGroupName() == "staff" || user.getGroupName() == "admin"}'>
                         <td>
-                            <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${row.doctor_id}" target="_blank">
+                            <a href="${pageContext.request.contextPath}/doctorAssign.jsp?doctorId=${row.doctor_id}" target="_blank" class="btn btn-xs btn-primary">
                                 assign                            
                             </a>
                         </td>

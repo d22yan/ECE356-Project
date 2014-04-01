@@ -51,3 +51,12 @@ body {
     top: 70px;
     right: 10px;
 }
+
+.btn-standalone {
+    display: block;
+    margin: 20px;
+}
+
+.form-standalone {
+    margin: 20px;
+}
