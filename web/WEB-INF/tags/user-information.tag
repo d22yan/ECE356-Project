@@ -131,7 +131,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.USER_ACCOUNT_PASSWORD%>,
                         tableType:"<%=Database.UpdateQueries.USER_ACCOUNT_TABLE_NAME%>",
-                        patientId:"<%=user.getRoleId()%>",
+                        patientId:"0",
                         updateValue:$('#password').val()},
                 success : function(data){
                     location.reload(true);

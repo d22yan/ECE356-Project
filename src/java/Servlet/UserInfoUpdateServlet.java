@@ -83,17 +83,18 @@ public class UserInfoUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int patientId       =0;
+        int requestPatientID=0;
         String  tableType   = request.getParameter("tableType");
         int     type        = Integer.parseInt(request.getParameter("type"));
         String  updateValue = request.getParameter("updateValue");
         User    user        = (User) request.getSession().getAttribute("user");
+       
+        requestPatientID = Integer.parseInt(request.getParameter("patientId"));
         
-        
-        patientId   = Integer.parseInt(request.getParameter("patientId"))>0?
-                        Integer.parseInt(request.getParameter("patientId")) : user.getRoleId();
+        patientId   = requestPatientID>0? requestPatientID: user.getRoleId();
         
         try {
-            PreparedStatement ps = UpdateQueries.getPreparedStatement(request, tableType, type);
+            PreparedStatement ps = UpdateQueries.getPreparedStatement(request, tableType, type, requestPatientID);
             ps.setString(1, updateValue);
             ps.setInt(2, patientId);
             ps.executeUpdate();
