@@ -4,6 +4,7 @@
     Author     : Lewis
 --%>
 
+<%@tag import="Database.Manager"%>
 <%@tag description="Generic Page Template" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="generic" tagdir="/WEB-INF/tags"%>
@@ -69,11 +70,14 @@
       <div class="container">
         <h1>${title}</h1>
         <c:choose>
-            <c:when test="${user != null}">
+            <c:when test="${empty user}">
+                <p>Welcome stranger!</p>
+            </c:when>
+            <c:when test="${user.groupName == 'admin' || user.groupName == 'financial'}">
                 <p>Welcome ${user.getUserName()}!</p>
             </c:when>
             <c:otherwise>
-                <p>Welcome!</p>
+                <p>Welcome <%=Manager.findRealName(((Model.User)request.getSession().getAttribute("user")).getGroupName(), ((Model.User)request.getSession().getAttribute("user")).getRoleId())%>!</p>
             </c:otherwise>
         </c:choose>
         

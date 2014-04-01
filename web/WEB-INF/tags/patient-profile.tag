@@ -61,9 +61,17 @@
             <tr id="userName">
                 <td class="col-md-5" >Username</td>
                 <td class="col-md-5" >
-                <c:forEach var="row" items="${patientUsername.rows}">
-                    <c:out value="${row.username}"></c:out>
-                </c:forEach>
+                    <c:choose>
+                        <c:when test="${!empty param.patientId}">
+                            <c:forEach var="row" items="${patientUsername.rows}">
+                                <c:out value="${row.username}"></c:out>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:out value="${user.userName}"></c:out>
+                        </c:otherwise>
+                    </c:choose>
+                
                 </td>
                 <td class="col-md-2" ></td>
             </tr>
