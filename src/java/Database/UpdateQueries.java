@@ -31,6 +31,7 @@ public class UpdateQueries {
     public static final int PATIENT_UPDATE_HEALTHCARD   = 4;
     public static final int PATIENT_UPDATE_SINCARD      = 5;
     public static final int PATIENT_UPDATE_HEALTHSTATUS = 6;
+    public static final int PATIENT_UPDATE_DEFAULTDOCTORID = 7;
     
     //list of different types for user_account
     public static final int USER_ACCOUNT_USERNAME       = 1;
@@ -85,6 +86,9 @@ public class UpdateQueries {
             case PATIENT_UPDATE_HEALTHSTATUS:
                 updateStatement+="current_health= ?";
                 break; 
+            case PATIENT_UPDATE_DEFAULTDOCTORID:
+                updateStatement+="default_doctor_id= ?";
+                break;  
             default:
                 updateStatement = null;
                 break;
