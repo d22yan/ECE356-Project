@@ -38,6 +38,11 @@
         <div class="row">     
         <div class="col-md-12">
         <table class="table table-hover" >
+            <tr id="roleId">
+                <td class="col-md-5" >Role ID</td>
+                <td class="col-md-5" >${user.roleId}</td>
+                <td class="col-md-2" ></td>
+            </tr>
             <tr id="editName">
                 <td class="col-md-5" >Name</td>
                 <td class="col-md-5" >

@@ -42,12 +42,31 @@
         <sql:query dataSource="${connection}" var="patientProfile">
             <%=patientProfileQuery%>
         </sql:query>
+        <c:if test="${!empty param.patientId}">
+            <sql:query dataSource="${connection}" var="patientUsername">
+                SELECT username FROM user_account WHERE role_id = ${param.patientId} AND group_name = "patient";
+            </sql:query>
+        </c:if>
             
         <div class="container">
         <h3>Patient Information</h3></br>
         <div class="row">     
         <div class="col-md-12">
         <table class="table table-hover" >
+            <tr id="roleId">
+                <td class="col-md-5" >Role ID</td>
+                <td class="col-md-5" >${param.patientId != null ? param.patientId : user.roleId}</td>
+                <td class="col-md-2" ></td>
+            </tr>
+            <tr id="userName">
+                <td class="col-md-5" >Username</td>
+                <td class="col-md-5" >
+                <c:forEach var="row" items="${patientUsername.rows}">
+                    <c:out value="${row.username}"></c:out>
+                </c:forEach>
+                </td>
+                <td class="col-md-2" ></td>
+            </tr>
             <tr id="editName">
                 <td class="col-md-5" >Name</td>
                 <td class="col-md-5" >
