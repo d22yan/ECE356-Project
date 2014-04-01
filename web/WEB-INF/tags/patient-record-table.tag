@@ -22,7 +22,11 @@
         user = (Model.User) request.getSession().getAttribute("user");
         if (user.getGroupName().equals("doctor")) {
             doctorId = user.getRoleId();
-            patientRecordQuery = Database.Query.DoctorPatientRecord(doctorId, patientId);
+            if (patientId == 0) {
+                patientRecordQuery = Database.Query.PatientRecordByDoctor(doctorId);
+            } else {
+                patientRecordQuery = Database.Query.DoctorPatientRecord(doctorId, patientId);
+            }
         } else if (user.getGroupName().equals("staff")) {
             staffId = user.getRoleId();
             patientRecordQuery = Database.Query.StaffPatientRecord(staffId, patientId);
@@ -30,11 +34,6 @@
             patientId = user.getRoleId();
             patientRecordQuery = Database.Query.PatientRecord(patientId);
         }
-        else {
-            patientRecordQuery = Database.Query.StaffPatientRecord(0, patientId);
-        }
-    } else {
-        patientRecordQuery = Database.Query.StaffPatientRecord(0, patientId);
     }
 %>
 <html>
@@ -116,6 +115,10 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+            </div>
+            <div class="searchbar">
+                number of patient records:
+                <span id="patient-record-counter"><span>
             </div>
         </div>
         <div class="table-responsive">
@@ -240,10 +243,9 @@
         </table>
         </div>
         <script type="text/javascript">
-            if (<%=patientId%> == 0) {
-                document.getElementById("patient-record-search-bar").style.display = "none";
-                document.getElementById("patient-record-table").style.display = "none";
-            }    
+            if(<%=patientId%> == 0) {
+                document.getElementById('add-patient-record').style.display = "none";
+            }
             $(document).ready(function() {
                 clearPatientRecordSearchFilter();
                 $('#patient-record-search-option option[value="patient-record-id"]').prop('selected', true);
@@ -393,6 +395,7 @@
                             $(this).show();
                         }
                     });
+                    updateNumberOfPatientRecord();
                 }
 
                 function patientRecordSearchRangeFilter() {
@@ -420,7 +423,7 @@
                             };
                             break;
                     }
-                        
+                    
                     $('#patient-record-table tbody tr[id^="patient-record"]').each(function() {
                         var testValue = parseValue($(this).find('[class^="' + option + '"]').text().replace(/\s/g, ''));
                         if (testValue == null || testValue < searchMin || testValue > searchMax) {
@@ -429,11 +432,24 @@
                             $(this).show();
                         }
                     });
+                    updateNumberOfPatientRecord();
+                }
+
+                function updateNumberOfPatientRecord() {
+                    counter = 0;
+                    $('#patient-record-table tbody tr[id^="patient-record"]').each(function() {
+                        if ($(this).is(":visible")) {
+                            counter += 1;
+                        }
+                    });
+                    $("#patient-record-counter").html(counter);
                 }
 
                 function validateVisitTimes(startTime, endTime) {
                     return moment(startTime) <= moment(endTime);
                 }
+
+                updateNumberOfPatientRecord();
             });
         </script>
     </c:if>

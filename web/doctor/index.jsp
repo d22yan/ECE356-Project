@@ -16,6 +16,9 @@
         </generic:tab-template>
         <generic:tab-template id="patient-tab" label="Patients">
             <jsp:body>
+                <a href="${pageContext.request.contextPath}/patientRecord.jsp?patientId=0" target="_blank">
+                    view all patient records
+                </a>
                 <generic:patient-table></generic:patient-table>
             </jsp:body>
         </generic:tab-template>
