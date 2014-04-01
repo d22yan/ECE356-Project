@@ -173,6 +173,26 @@ public class Manager {
         }
     }
     
+        public static void createAppointment(int appointmentId, int doctorId, int patId, String startDate, String endDate)
+            throws ClassNotFoundException, SQLException {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            statement.executeUpdate(
+                Database.Query.createAppointment(appointmentId, doctorId, patId, startDate, endDate)
+            );
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conection != null) {
+                conection.close();
+            }
+        }
+    }
+    
     public static boolean verifyAppointment( Date start, Date end, int doctorId, int appointmentId )
     {
         Connection conection = null;
@@ -223,7 +243,7 @@ public class Manager {
         }
         return false;
     }
-
+    
     public static int selectLastPatientRecordId() {
         Connection conection = null;
         Statement statement = null;
@@ -235,6 +255,38 @@ public class Manager {
                 throw new ClassNotFoundException();
             }
             return patientRecordSet.getInt("patient_record_id");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conection != null) {
+                try {
+                    conection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static int selectLastAppointmentId() {
+        Connection conection = null;
+        Statement statement = null;
+        try {
+            conection = getConnection();
+            statement = conection.createStatement();
+            ResultSet patientRecordSet = statement.executeQuery("SELECT * FROM appointment ORDER BY appointment_id DESC LIMIT 1");
+            if (!patientRecordSet.first()) {
+                throw new ClassNotFoundException();
+            }
+            return patientRecordSet.getInt("appointment_id");
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

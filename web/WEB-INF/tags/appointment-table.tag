@@ -72,6 +72,11 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+            </div
+            <div>
+            <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-danger" role="button">
+                Create Appointment
+            </a>
             </div>
         </form>
         <div class="table-responsive">
@@ -132,8 +137,7 @@
                 $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
                     if ( ${user.getGroupName() == "staff"} )
                     {
-                        window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
-                                                                                                'doctorId=' + $(this).data('doctor-id') + '&' +
+                        window.open('${pageContext.request.contextPath}/editAppointment.jsp?doctorId=' + $(this).data('doctor-id') + '&' +
                                                                                                 'patientId=' + $(this).data('patient-id') + '&' +
                                                                                                 'startTime=' + $(this).data('start-time') + '&' +
                                                                                                  'endTime=' + $(this).data('end-time'), '_blank');
