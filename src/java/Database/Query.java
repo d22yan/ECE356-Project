@@ -54,6 +54,16 @@ public class Query {
             "WHERE " +
                     "user_account.username = '" + username + "'; ";
     }
+    
+    public static String FindRealName(String groupName, int roleId) {
+        return
+            "SELECT " +
+                    groupName + "_name " +
+            "FROM " +
+                    groupName + " " +
+            "WHERE " +
+                    groupName + "." + groupName + "_id = '" + roleId + "'; ";        
+    }
 
     public static String getMaxRoleId(String groupName) {
         return
