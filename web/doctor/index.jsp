@@ -9,7 +9,13 @@
 
 <generic:page-template title="Doctor" tabbed="true">
     <jsp:body>
-        <generic:tab-template id="appointment-tab" label="Appointments" isActive="true">
+        <generic:tab-template id="user-information-tab" label="Information" isActive="true">
+            <jsp:body>
+                <generic:user-information></generic:user-information>
+            </jsp:body>
+        </generic:tab-template>
+        
+        <generic:tab-template id="appointment-tab" label="Appointments">
             <jsp:body>
                 <generic:appointment-table></generic:appointment-table>
             </jsp:body>

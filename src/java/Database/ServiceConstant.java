@@ -16,12 +16,5 @@ public class ServiceConstant {
     public static final String pwd = "d22yan_user";
     public static final String database = "ece356db_d22yan";
     public static final String dataSourceUrl = url + database;
-    
-    public static enum Group {
-        LEGAL,
-        FINANCE,
-        DOCTOR,
-        STAFF,
-        PATIENT
-    }
+        
 }

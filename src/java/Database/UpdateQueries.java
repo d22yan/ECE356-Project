@@ -21,6 +21,8 @@ public class UpdateQueries {
     //list of table names
     public static final String PATIENT_TABLE_NAME       = "patient";
     public static final String USER_ACCOUNT_TABLE_NAME  = "user_account";
+    public static final String DOCTOR_TABLE_NAME        = "doctor";
+    public static final String STAFF_TABLE_NAME         = "staff";
     
     //list of different types for patient
     public static final int PATIENT_UPDATE_NAME         = 1;
@@ -33,6 +35,11 @@ public class UpdateQueries {
     public static final int USER_ACCOUNT_USERNAME       = 1;
     public static final int USER_ACCOUNT_PASSWORD       = 2;
     
+    //list of different types for doctor
+    public static final int DOCTOR_UPDATE_NAME       = 1;
+    
+    //list of different types for staff
+    public static final int STAFF_UPDATE_NAME       = 1;
     
     public static PreparedStatement getPreparedStatement(HttpServletRequest request, String tableName, int type) throws ClassNotFoundException, SQLException {
         String queryStatement = null;
@@ -42,7 +49,13 @@ public class UpdateQueries {
                 break;
             case USER_ACCOUNT_TABLE_NAME:
                 queryStatement=getUserAccountUpdateStatement(type,request);
-                break;    
+                break;  
+            case DOCTOR_TABLE_NAME:
+                queryStatement=getDoctorAccountUpdateStatement(type);
+                break; 
+            case STAFF_TABLE_NAME:
+                queryStatement=getStaffAccountUpdateStatement(type);
+                break; 
             default:
                 break;
         }
@@ -75,8 +88,8 @@ public class UpdateQueries {
     }
     
     public static String getUserAccountUpdateStatement(int type, HttpServletRequest request) {
-        String updateStatement = "UPDATE " + USER_ACCOUNT_TABLE_NAME + " SET ";
-        User    user        = (User) request.getSession().getAttribute("user");
+        String updateStatement  = "UPDATE " + USER_ACCOUNT_TABLE_NAME + " SET ";
+        User    user            = (User) request.getSession().getAttribute("user");
         switch(type) {
             case USER_ACCOUNT_USERNAME:
                 updateStatement+="username= ?";
@@ -89,6 +102,32 @@ public class UpdateQueries {
                 break;
         }
         return updateStatement!=null? updateStatement + " WHERE role_id=? and group_name='"+user.getGroupName()+"';" : null;
+    }
+    
+    public static String getDoctorAccountUpdateStatement(int type) {
+        String updateStatement = "UPDATE " + DOCTOR_TABLE_NAME + " SET ";
+        switch(type) {
+            case DOCTOR_UPDATE_NAME:
+                updateStatement+="doctor_name= ?";
+                break;
+            default:
+                updateStatement = null;
+                break;
+       }
+        return updateStatement!=null? updateStatement + " WHERE doctor_id=?;" : null;
+    }
+    
+    public static String getStaffAccountUpdateStatement(int type) {
+        String updateStatement = "UPDATE " + STAFF_TABLE_NAME + " SET ";
+        switch(type) {
+            case STAFF_UPDATE_NAME:
+                updateStatement+="staff_name= ?";
+                break;
+            default:
+                updateStatement = null;
+                break;
+       }
+        return updateStatement!=null? updateStatement + " WHERE staff_id=?;" : null;
     }
     
 }

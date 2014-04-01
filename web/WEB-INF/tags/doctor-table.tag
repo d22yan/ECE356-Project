@@ -47,6 +47,11 @@
                     <%=defaultQuery%>
                 </sql:query>
             </c:when>
+            <c:when test='${user.getGroupName() == "financial"}'>
+                <sql:query dataSource="${connection}" var="doctorList">
+                    <%=defaultQuery%>
+                </sql:query>
+            </c:when>
         </c:choose>
         <table id="doctor-table" class="table">
             <thead>
