@@ -420,6 +420,19 @@ public class Query {
             "WHERE " +
                 "appointment.appointment_id = " + appointmentId + ";";
     }
+    
+    public static String createAppointment(int appointmentId, int doctorId, int patientId, String startDate, String endDate)
+    {
+        return
+            "INSERT INTO " +
+                "ece356db_d22yan.appointment " +
+            "VALUES (" +
+                appointmentId + ", " +
+                doctorId + ", " +
+                patientId + ", " +
+                "\"" + startDate + "\", " +
+                "\"" + endDate + "\");";
+    }
 
     public static String HistoryTable(String historyTable) {
         return 

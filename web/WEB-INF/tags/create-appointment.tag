@@ -7,15 +7,11 @@
 <%@tag description="Appointment Edit" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
-<%@taglib tagdir="/WEB-INF/tags" prefix="edit-appointment" %>
+<%@taglib tagdir="/WEB-INF/tags" prefix="create-appointment" %>
 <%
     int staffId = 0;
-    int appointmentId = 0;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     Model.User user = null;
-    if (request.getParameter("appointmentId") != null) {
-        appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
-    }
     if (request.getSession().getAttribute("user") != null) {
         user = (Model.User) request.getSession().getAttribute("user");
         if (user.getGroupName().equals("staff")) {
@@ -69,40 +65,21 @@
                 doctor.doctor_id = test.doctor_id;
         </sql:query>
         <c:if test='${user.getGroupName() == "staff"}'> 
-            <form role="form" action="${pageContext.request.contextPath}/EditAppointmentServlet" method="post">
-                <input type="hidden" name="appointmentId" value="${param.appointmentId}">
+            <form role="form" action="${pageContext.request.contextPath}/CreateAppointmentServlet" method="post">
                 <p>Start Time:</p>
                 <select name="doctor">
                     <c:forEach var="row" items="${doctorInformation.rows}">
-                        <c:choose>
-                            <c:when test='${param.doctorId == row.doctor_id}'>
-                                <option value="${row.doctor_id}" selected>
-                                    <c:out value="${row.doctor_name}"/>
-                                </option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${row.doctor_id}">
-                                    <c:out value="${row.doctor_name}"/>
-                                </option>
-                            </c:otherwise>
-                        </c:choose>
+                        <option value="${row.doctor_id}">
+                            <c:out value="${row.doctor_name}"/>
+                        </option>
                     </c:forEach>
                 </select>
                 <p>Patient:</p>
                 <select name="patient">
                     <c:forEach var="row" items="${patientInformation.rows}">
-                        <c:choose>
-                            <c:when test='${param.patientId == row.patient_id}'>
-                                <option value="${row.patient_id}" selected>
-                                    <c:out value="${row.patient_name}"/>
-                                </option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${row.patient_id}">
-                                    <c:out value="${row.patient_name}"/>
-                                </option>
-                            </c:otherwise>
-                        </c:choose>
+                            <option value="${row.patient_id}">
+                                <c:out value="${row.patient_name}"/>
+                            </option>
                     </c:forEach>
                 </select>
                 <p>Start Time:</p>
