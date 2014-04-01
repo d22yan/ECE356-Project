@@ -71,7 +71,7 @@
         <h1>${title}</h1>
         <c:choose>
             <c:when test="${empty user}">
-                <p>Welcome stranger!</p>
+                <p>Welcome!</p>
             </c:when>
             <c:when test="${user.groupName == 'admin' || user.groupName == 'financial'}">
                 <p>Welcome ${user.getUserName()}!</p>

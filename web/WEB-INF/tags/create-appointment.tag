@@ -59,7 +59,7 @@
                 doctor.doctor_id = test.doctor_id;
         </sql:query>
         <c:if test='${user.getGroupName() == "staff"}'> 
-            <form role="form" action="${pageContext.request.contextPath}/CreateAppointmentServlet" method="post">
+            <form role="form" action="${pageContext.request.contextPath}/CreateAppointmentServlet" method="post" class="form-standalone">
                 <p>Doctor</p>
                 <select name="doctor" class="form-control">
                     <c:forEach var="row" items="${doctorInformation.rows}">

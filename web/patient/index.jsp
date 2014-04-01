@@ -23,7 +23,7 @@
         </generic:tab-template>
         <generic:tab-template id="patient-record-tab" label="Patient Records">
             <jsp:body>
-                <a href='${pageContext.request.contextPath}/patientRecord.jsp?patientId=${user.getRoleId()}' target='_blank'>goto patientRecord</a>
+                <a href='${pageContext.request.contextPath}/patientRecord.jsp?patientId=${user.getRoleId()}' target='_blank' class="btn btn-primary">go to patient record</a>
             </jsp:body>
         </generic:tab-template>
     </jsp:body>

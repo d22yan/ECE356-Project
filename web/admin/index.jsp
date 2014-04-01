@@ -14,9 +14,8 @@
         <generic:tab-template id="audit-trail-tab" label="Audit Trail" isActive="true">
             <jsp:body>
                 <c:forTokens var="historyTable" items="appointment,assigned_patient,assigned_staff,doctor,grant_permission,patient,patient_record,staff,user_account" delims=",">
-                    <a href="${pageContext.request.contextPath}/auditTrail.jsp?historyTable=${historyTable}" target="_blank">
-                        goto <c:out value="${historyTable}"/> history table
-                        <br/>
+                    <a href="${pageContext.request.contextPath}/auditTrail.jsp?historyTable=${historyTable}" target="_blank" class="btn btn-primary btn-standalone">
+                        go to <c:out value="${historyTable}"/> history table
                     </a>
                 </c:forTokens>
             </jsp:body>
@@ -33,9 +32,8 @@
         </generic:tab-template>
         <generic:tab-template id="patient-record-tab" label="Patient Records">
             <jsp:body>
-                <a href="${pageContext.request.contextPath}/patientRecord.jsp?" target="_blank">
-                    goto patient record
-                    <br/>
+                <a href="${pageContext.request.contextPath}/patientRecord.jsp?" target="_blank" class="btn btn-primary btn-standalone">
+                    view all patient records
                 </a>
             </jsp:body>
         </generic:tab-template>
