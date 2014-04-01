@@ -201,10 +201,12 @@ public class Manager {
             conection = getConnection();
             statement = conection.createStatement();
             ResultSet patientRecordSet = statement.executeQuery("SELECT * FROM appointment WHERE appointment.doctor_id = " + doctorId + " AND appointment.appointment_id != " + appointmentId);
+            if ( end.before(start) )
+            {
+                return false;
+            }
             while( patientRecordSet.next() )
             {
-                Date tempTestStart = start;
-                Date tempTestEnd = end;
                 String tempStartDateString = patientRecordSet.getString("appointment_start_time");
                 String tempEndDateString = patientRecordSet.getString("appointment_end_time");
                 
@@ -216,10 +218,6 @@ public class Manager {
                 {
                     return false;
                 }
-            }
-            if ( end.before(start) )
-            {
-                return false;
             }
             return true;
         } catch (SQLException | ClassNotFoundException ex) {

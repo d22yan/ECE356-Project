@@ -27,12 +27,6 @@
                 float:left;
                 margin-left: 10px; 
             }
-            
-            #patient-record-table > tbody > tr[id^="patient-record"]:hover,
-            #patient-record-table > tbody > tr[id="add-patient-record"]:hover {
-                background: #DDDDDD;
-                cursor: pointer;
-            }
         </style>
         <sql:setDataSource 
             var="connection" 

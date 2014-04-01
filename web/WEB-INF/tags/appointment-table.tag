@@ -72,7 +72,7 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
-            </div
+            </div>
             <div>
             <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-danger" role="button">
                 Create Appointment

@@ -41,8 +41,8 @@ public class EditAppointmentServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        User user = (Model.User) request.getSession().getAttribute("user");
         try {
-            User user = (Model.User) request.getSession().getAttribute("user");
             
             int appId = Integer.parseInt( request.getParameter("appointmentId") );
             int docId = Integer.parseInt( request.getParameter("doctor") );
@@ -55,7 +55,10 @@ public class EditAppointmentServlet extends HttpServlet {
             Date startDate = preformatter.parse(inputStartDate);
             Date endDate = preformatter.parse(inputEndDate);
             
-            Database.Manager.verifyAppointment(startDate, endDate, docId, appId);
+            if ( !Database.Manager.verifyAppointment(startDate, endDate, docId, appId) )
+            {
+                throw new ParseException("", 0);
+            }
             
             SimpleDateFormat postformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");         
             String sqlStartDate = postformatter.format(startDate);
@@ -74,7 +77,8 @@ public class EditAppointmentServlet extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex){
-            out.close();
+            request.getSession().setAttribute("errorMsg", "Invalid Input");
+            response.sendRedirect(user.getGroupName()); //redirect to root
         } finally {
             out.close();
         }
