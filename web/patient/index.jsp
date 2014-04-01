@@ -11,7 +11,6 @@
 
 <generic:page-template title="Patient" tabbed="true">
     <jsp:body>
-        <a href='${pageContext.request.contextPath}/patientRecord.jsp?patientId=${user.getRoleId()}' target='_blank'>goto patientRecord</a>
         <generic:tab-template id="patient-profile-tab" label="Profile" isActive="true">
             <jsp:body>
                 <generic:patient-profile></generic:patient-profile>
@@ -20,6 +19,11 @@
         <generic:tab-template id="appointment-tab" label="Appointments">
             <jsp:body>
                 <generic:appointment-table></generic:appointment-table>
+            </jsp:body>
+        </generic:tab-template>
+        <generic:tab-template id="patient-record-tab" label="Patient Records">
+            <jsp:body>
+                <a href='${pageContext.request.contextPath}/patientRecord.jsp?patientId=${user.getRoleId()}' target='_blank'>goto patientRecord</a>
             </jsp:body>
         </generic:tab-template>
     </jsp:body>
