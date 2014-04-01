@@ -131,13 +131,14 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $('[id^="edit-appointment"]').click(function(e){
-                    alert("<!--TODO direct to appointment page-->");
                 });
                 
                 $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
                     if ( ${user.getGroupName() == "staff"} )
                     {
-                        window.open('${pageContext.request.contextPath}/editAppointment.jsp?doctorId=' + $(this).data('doctor-id') + '&' +
+                        window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
+                                                                                                'doctorId=' + $(this).data('doctor-id') + '&' +
+                                
                                                                                                 'patientId=' + $(this).data('patient-id') + '&' +
                                                                                                 'startTime=' + $(this).data('start-time') + '&' +
                                                                                                  'endTime=' + $(this).data('end-time'), '_blank');
