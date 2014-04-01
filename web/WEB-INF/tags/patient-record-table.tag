@@ -45,6 +45,8 @@
             } else {
                 patientRecordQuery = Database.Query.PatientRecord(patientId);
             }
+        } else if (groupName.equals("admin")) {
+            patientRecordQuery = Database.Query.AdminPatientRecord();
         }
     }
 %>
@@ -83,19 +85,28 @@
         </sql:query>
         <div class="row">
             <c:forEach var ="row" items="${patientInformation.rows}">
-                <div class="col-md-4">
-                    <h2>
-                       <c:out value="${row.patient_name}"/>
-                    </h2>
+                <div id="patient-name" data-patient-name="${row.patient_name}" ${row.patient_name}class="col-md-4">
+                    <h3>
+                        <c:choose>
+                            <c:when test='${user.getGroupName() == "financial"}'>
+                                patient id: 
+                                <c:out value="${row.patient_id}"/>
+                            </c:when>
+                            <c:otherwise>
+                                patient name: 
+                                <c:out value="${row.patient_name}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </h3>
                 </div>
             </c:forEach>
         </div>
         <div class="row" style="display: none">
             <c:forEach var ="row" items="${doctorInformation.rows}">
                 <div class="col-md-4">
-                    <h2 id="user-doctor-name">
+                    <h3 id="user-doctor-name">
                        <c:out value="${row.doctor_name}"/>
-                    </h2>
+                    </h3>
                 </div>
             </c:forEach>
         </div>
@@ -103,6 +114,9 @@
             <div id="patient-record-search-option" class="searchbar">
                 <select class="form-control">
                     <option data-type="int" value="patient-record-id">patient record id</option>
+                    <c:if test='${user.getGroupName() != "financial"}'> 
+                         <option data-type="string" value="patient-name">patient name</option>
+                    </c:if>
                     <option data-type="string" value="doctor-name">doctor name</option>
                     <option data-type="date" value="date">date</option>
                     <option data-type="string" value="diagnosis">diagnosis</option>
@@ -138,6 +152,9 @@
             <thead>
                 <tr>
                     <th>record id</th>
+                    <c:if test='${user.getGroupName() != "financial"}'> 
+                        <th>patient name</th>
+                    </c:if>
                     <th>date</th>
                     <th>written by</th>
                 </tr>
@@ -149,6 +166,11 @@
                         <td class="patient-record-id">
                             <c:out value="${row.patient_record_id}"/>
                         </td>
+                        <c:if test='${user.getGroupName() != "financial"}'> 
+                            <td class="patient-name">
+                                <c:out value="${row.patient_name}"/>
+                            </td>
+                        </c:if>
                         <td class="date">
                             <c:out value="${row.patient_record_date}"/>
                         </td>
@@ -309,11 +331,26 @@
                                         '<td class="patient-record-id">' +
                                             patientRecordId +
                                         '</td>' +
+                                        '<td class="patient-name">' +
+                                            $('#patient-name').data("patient-name") + 
+                                        '</td>' +
                                         '<td class="date">' +
                                             patientRecordDate +
                                         '</td>' +
                                         '<td class="doctor-name">' +
                                             patientDoctorName +
+                                        '</td>' +
+                                        '<td class="diagnosis" hidden>' +
+                                            diagnosis +
+                                        '</td>' +
+                                        '<td class="treatment-schedule" hidden>' +
+                                            treatmentSchedule +
+                                        '</td>' +
+                                        '<td class="prescription" hidden>' +
+                                            prescription +
+                                        '</td>' +
+                                        '<td class="freeform" hidden>' +
+                                            freeform +
                                         '</td>' +
                                     '</tr>' +
                                     '<tr id="data-patient-record-' + patientRecordId + '" style="display: none;">' +

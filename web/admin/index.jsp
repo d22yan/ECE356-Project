@@ -31,5 +31,13 @@
                 <generic:doctor-table></generic:doctor-table>
             </jsp:body>
         </generic:tab-template>
+        <generic:tab-template id="patient-record-tab" label="Patient Records">
+            <jsp:body>
+                <a href="${pageContext.request.contextPath}/patientRecord.jsp?" target="_blank">
+                    goto patient record
+                    <br/>
+                </a>
+            </jsp:body>
+        </generic:tab-template>
     </jsp:body>
 </generic:page-template>
