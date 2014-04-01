@@ -34,7 +34,7 @@
         </sql:query>
             
         <div class="container">
-        <h3>Patient Information</h3></br>
+        <h3>User Information</h3></br>
         <div class="row">     
         <div class="col-md-12">
         <table class="table table-hover" >

@@ -22,12 +22,8 @@
 <html>
     <c:if test='${user != null}'>
         <style type="text/css">
-            .searchbar {
-                float:left;
-                margin-left: 10px; 
-            }
-            #doctor-table > tbody[id^="patient-"] :hover {
-                background: #DDDDDD;
+            #doctor-table tbody tr[id^="doctor-"] :hover {
+                cursor: pointer;
             }
         </style>
         <sql:setDataSource 
@@ -53,15 +49,43 @@
                 </sql:query>
             </c:when>
         </c:choose>
-        <table id="doctor-table" class="table">
+        
+        <form id="doctor-searchbar" class="form-inline clearfix" style="padding: 10px">
+            <div id="search-option" class="searchbar">
+                <select class="form-control">
+                    <option value="doctor-id" selected="selected" data-type="int">doctor id</option>
+                    <option value="doctor-name" data-type="string">doctor name</option>
+                </select> 
+            </div>
+            <div id="search-single" class="searchbar" style="width:200px" hidden>
+                <input id="search-input" class="form-control" type="search" placeholder="search"></input>
+            </div>
+            <div id="search-range" class="form-inline searchbar" style="width:500px">
+                <div class="input-group date" style="float:left;padding-right:5px; width:200px">
+                    <input id="search-min" class="form-control" type="search" placeholder="min"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="input-group date" style="width:200px">
+                    <input id="search-max" class="form-control" type="search" placeholder="max"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+        <table id="doctor-table" class="table table-hover table-condensed">
             <thead>
                 <tr>
                     <th>doctor id</th>
                     <th>doctor name</th>
                 </tr>
             </thead>
+            <tbody>
             <c:forEach var="row" items="${doctorList.rows}">
-                <tbody>
+                <tr>
                     <td class="doctor-id">
                         <c:out value="${row.doctor_id}"/>
                     </td>
@@ -82,21 +106,95 @@
                             </a>
                         </td>
                     </c:if>
-                    <c:if test='${user.getGroupName() == "admin"}'>
-                        <td>
-                            <a id="edit-doctor-${row.doctor_id}" data-doctor-id="${row.doctor_id}" href="#">
-                                what is this?
-                            </a>
-                        </td>
-                    </c:if>
-                </tbody>
+                </tr>
             </c:forEach>
+            </tbody>
         </table>
+        </div>
         <script type="text/javascript">
             $(document).ready(function() {
-                $('[id^="edit-doctor"]').click(function(e){
-                    alert("<!--TODO direct to doctor page-->");
+                $(function(){
+                    $('#doctor-table').tablesorter();
                 });
+                
+                clearSearchFilter();
+
+                $('#doctor-searchbar #search-range .input-group').datetimepicker();
+
+                $('#doctor-searchbar #search-option').change(function() {
+                    if ($(this).find(':selected').data('type') == 'string') {
+                        $('#doctor-searchbar #search-single').show();
+                        $('#doctor-searchbar #search-range').hide();
+                        $('#doctor-searchbar #search-single .form-control').val('');
+                        searchFilter();
+                    } else {
+                        $('#doctor-searchbar #search-single').hide();
+                        $('#doctor-searchbar #search-range').show();
+                        $('#doctor-searchbar #search-range .form-control').val('');
+                        searchRangeFilter();
+                    }
+                });
+
+                $('#doctor-searchbar #search-input').on('input', function(e) {
+                    searchFilter();
+                });
+
+                $('#doctor-searchbar #search-range .form-control').on('input', function(e) {
+                    searchRangeFilter();
+                });
+
+                $('#doctor-searchbar #search-range .date').on('dp.change', function(e) {
+                    searchRangeFilter();
+                });
+
+                function clearSearchFilter() {
+                    $('#doctor-searchbar #search-input').val('');
+                    $('#doctor-searchbar #search-range #search-min, #doctor-searchbar #search-range #search-max').val('');
+                }
+
+                function searchFilter() {
+                    var searchInput = $.trim($('#doctor-searchbar #search-input').val().toLowerCase());
+                    var option = $('#doctor-searchbar #search-option').find(':selected').val();
+                    $('#doctor-table tbody tr').each(function() {
+                        if ($.trim($(this).find('[class^="' + option + '"]').text().toLowerCase()).indexOf(searchInput) == -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                }
+                
+                function searchRangeFilter() {
+                    var valueType = $('#doctor-searchbar #search-option').find(':selected').data('type');
+                    var option = $('#doctor-searchbar #search-option').find(':selected').val();
+                    
+                    var searchMin, searchMax, parseValue;
+                    switch (valueType) {
+                        case "int": 
+                            searchMin = parseInt($.trim($('#doctor-searchbar #search-min').val()));
+                            searchMax = parseInt($.trim($('#doctor-searchbar #search-max').val()));
+                            parseValue = function(value) { 
+                                return !isNaN(parseInt(value)) ? parseInt(value) : null; 
+                            };
+                            break;
+                        case "date":
+                            searchMin = moment($.trim($('#doctor-searchbar #search-min').val()));
+                            searchMax = moment($.trim($('#doctor-searchbar #search-max').val()));
+                            parseValue = function(value) {
+                                return moment(value).isValid() ? moment(value) : null;
+                            };
+                            break;
+                    }
+                        
+                    $('#doctor-table tbody tr').each(function() {
+                        var testValue = parseValue($.trim($(this).find('[class^="' + option + '"]').text()));
+                        if (testValue == null || testValue < searchMin || testValue > searchMax) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                }
             });
         </script>
     </c:if>
