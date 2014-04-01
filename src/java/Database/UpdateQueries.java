@@ -37,10 +37,11 @@ public class UpdateQueries {
     public static final int USER_ACCOUNT_PASSWORD       = 2;
     
     //list of different types for doctor
-    public static final int DOCTOR_UPDATE_NAME       = 1;
+    public static final int DOCTOR_UPDATE_NAME          = 1;
     
     //list of different types for staff
-    public static final int STAFF_UPDATE_NAME       = 1;
+    public static final int STAFF_UPDATE_NAME           = 1;
+   
     
     public static PreparedStatement getPreparedStatement(HttpServletRequest request, String tableName, int type, int ID) throws ClassNotFoundException, SQLException {
         String queryStatement = null;

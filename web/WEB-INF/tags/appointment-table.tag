@@ -121,8 +121,19 @@
                         </td>
                         <c:if test='${user.getGroupName() == "staff"}'>
                             <td>
-                            <button id="edit-appointment-${row.appointment_id}" class="btn btn-primary btn-xs" data-appointment-id="${row.appointment_id}" href="#">
+                            <button id="edit-appointment-${row.appointment_id}" 
+                                    data-appointment-id = "${row.appointment_id}" 
+                                    data-doctor-id = "${row.doctor_id}" 
+                                    data-patient-id = "${row.patient_id}"
+                                    data-start-time = "${row.appointment_start_time}"
+                                    data-end-time="${row.appointment_end_time}"
+                                    class="btn btn-primary btn-xs" data-appointment-id="${row.appointment_id}" href="#">
                                 edit
+                            </button>
+                            </td>
+                            <td>
+                            <button id="delete-appointment-${row.appointment_id}" class="btn btn-danger btn-xs" data-appointment-id="${row.appointment_id}" href="#">
+                                delete
                             </button>
                             </td>
                         </c:if>
@@ -134,9 +145,6 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $('[id^="edit-appointment"]').click(function(e){
-                });
-                
-                $('#appointment-table > tbody > tr[id^="appointment-"]').click(function(e){
                     if ( ${user.getGroupName() == "staff"} )
                     {
                         window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
@@ -146,6 +154,24 @@
                                                                                                 'startTime=' + $(this).data('start-time') + '&' +
                                                                                                  'endTime=' + $(this).data('end-time'), '_blank');
                     }
+                });
+               
+                
+                $('[id^="delete-appointment"]').click(function(){
+                    if ( ${user.getGroupName() == "staff"} ) {
+                        $.ajax({
+                            type: "POST",
+                            url: "${pageContext.request.contextPath}/deleteAppointment",
+                            data: {appointmentid:$(this).data('appointment-id')},
+                            success : function(data){
+                                location.reload(true);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                alert(jqXHR+" - "+textStatus+" - "+errorThrown);
+                            }  
+                        });
+                    }                        
+
                 });
                 
                 $(function(){
