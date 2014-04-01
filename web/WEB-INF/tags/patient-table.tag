@@ -128,7 +128,7 @@
                 clearSearchFilter();
                 toggleCurrentPatient(true);
 
-                $('#patient-searchbar #search-range .input-group').datetimepicker({ pickTime: false });
+                $('#patient-searchbar #search-range .input-group').datetimepicker();
                 
                 $('[id^="edit-patient"]').click(function(e){
                     e.stopPropagation();
@@ -217,15 +217,15 @@
                     var searchMin, searchMax, parseValue;
                     switch (valueType) {
                         case "int": 
-                            searchMin = parseInt($('#patient-searchbar #search-min').val().replace(/\s/g, ''));
-                            searchMax = parseInt($('#patient-searchbar #search-max').val().replace(/\s/g, ''));
+                            searchMin = parseInt($.trim($('#patient-searchbar #search-min').val()));
+                            searchMax = parseInt($.trim($('#patient-searchbar #search-max').val()));
                             parseValue = function(value) { 
                                 return !isNaN(parseInt(value)) ? parseInt(value) : null; 
                             };
                             break;
                         case "date":
-                            searchMin = moment($('#patient-searchbar #search-min').val().replace(/\s/g, ''));
-                            searchMax = moment($('#patient-searchbar #search-max').val().replace(/\s/g, ''));
+                            searchMin = moment($.trim($('#patient-searchbar #search-min').val()));
+                            searchMax = moment($.trim($('#patient-searchbar #search-max').val()));
                             parseValue = function(value) {
                                 return moment(value).isValid() ? moment(value) : null;
                             };
@@ -233,7 +233,7 @@
                     }
                         
                     $('#patient-table tbody tr').each(function() {
-                        var testValue = parseValue($(this).find('[class^="' + option + '"]').text().replace(/\s/g, ''));
+                        var testValue = parseValue($.trim($(this).find('[class^="' + option + '"]').text()));
                         if (testValue == null || testValue < searchMin || testValue > searchMax || (!$(this).data('isCurrentPatient') && isCurrentPatient)) {
                             $(this).hide();
                         } else {

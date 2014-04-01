@@ -27,10 +27,15 @@ th.tablesorter-header {
 
 #footer {
     background-color: #F5F5F5;
+    z-index: 0;
 }
 
 body { 
     padding-bottom: 70px; 
+}
+
+.jumbotron {
+    padding-bottom: 0px;
 }
 
 #credits {
@@ -39,4 +44,10 @@ body {
 
 .capitalize {
     text-transform: capitalize;
+}
+
+#error-panel {
+    position: fixed;
+    top: 70px;
+    right: 10px;
 }

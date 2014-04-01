@@ -79,17 +79,17 @@
         
         <c:choose>
             <c:when test="${user == null}">
-                <label for="username"><p><a class="btn btn-primary btn-lg" role="button">
+                <label for="username"><p><a class="btn btn-primary" role="button">
                     Sign in &raquo;
                 </a></p></label>
             </c:when>
             <c:when test="${title == 'Home' && user != null}">
-                <p><a href="${pageContext.request.contextPath}/${user.getGroupName()}" class="btn btn-primary btn-lg" role="button">
+                <p><a href="${pageContext.request.contextPath}/${user.getGroupName()}" class="btn btn-primary" role="button">
                     Return to <span class="capitalize">${user.getGroupName()}</span> &raquo;
                 </a></p>
             </c:when>
             <c:when test="${title != 'Home'}">
-                <p><a href="${pageContext.request.contextPath}/" class="btn btn-primary btn-lg" role="button">
+                <p><a href="${pageContext.request.contextPath}/" class="btn btn-primary" role="button">
                     Return to Home &raquo;
                 </a></p>
             </c:when>
@@ -137,14 +137,13 @@
                     <a class="dev-name" href="#" data-toggle="tooltip" title="q35liu">Lewis (Qi) Liu</a>
                 </p>
             </div>
-            
-            <div class="navbar-collapse collapse">
-                <div class="navbar-right">
-                    <!-- DEBUG PANEL -->
-                    
-                </div>
-            </div>
         </div>
     </div>
+    <c:if test="${!empty errorMsg}">
+        <div id="error-panel" class="col-md-5 alert alert-danger fade in" data-dismiss="alert" >
+            ${errorMsg}
+        </div>
+        <c:remove var="errorMsg" scope="session" />
+    </c:if>
   </body>
 </html>
