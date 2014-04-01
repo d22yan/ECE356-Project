@@ -250,7 +250,7 @@
                         <button type="button" id="nameButton" class="btn btn-primary btn-sm" onclick="updateHealthStatus()">Save change</button>
                     </td>
                 </tr>
-            </c:if>
+            </c:if>   
         </table>
         </div>
         </div>
