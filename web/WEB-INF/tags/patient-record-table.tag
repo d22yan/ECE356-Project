@@ -37,10 +37,14 @@
             patientId = user.getRoleId();
             patientRecordQuery = Database.Query.PatientRecord(patientId);
         } else if (groupName.equals("financial")) {
-            if (request.getParameter("doctorId") != null) {
-                financialDoctorId = Integer.parseInt(request.getParameter("doctorId"));
+            if (patientId == 0) {
+                if (request.getParameter("doctorId") != null) {
+                    financialDoctorId = Integer.parseInt(request.getParameter("doctorId"));
+                }
+                patientRecordQuery = Database.Query.PatientRecordByDoctor(financialDoctorId);
+            } else {
+                patientRecordQuery = Database.Query.PatientRecord(patientId);
             }
-            patientRecordQuery = Database.Query.PatientRecordByDoctor(financialDoctorId);
         }
     }
 %>
