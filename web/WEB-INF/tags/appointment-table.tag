@@ -74,9 +74,12 @@
                 </div>
             </div>
             <div>
+            <c:if test="${user.groupName == 'staff'}">
             <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-danger" role="button">
                 Create Appointment
             </a>
+            </c:if>    
+
             </div>
         </form>
         <div class="table-responsive">
