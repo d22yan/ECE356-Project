@@ -38,6 +38,11 @@
         <div class="row">     
         <div class="col-md-12">
         <table class="table table-hover" >
+            <tr id="roleId">
+                <td class="col-md-5" >Role ID</td>
+                <td class="col-md-5" >${user.roleId}</td>
+                <td class="col-md-2" ></td>
+            </tr>
             <tr id="editName">
                 <td class="col-md-5" >Name</td>
                 <td class="col-md-5" >
@@ -131,7 +136,7 @@
                 url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
                 data: {type:<%=Database.UpdateQueries.USER_ACCOUNT_PASSWORD%>,
                         tableType:"<%=Database.UpdateQueries.USER_ACCOUNT_TABLE_NAME%>",
-                        patientId:"<%=user.getRoleId()%>",
+                        patientId:"0",
                         updateValue:$('#password').val()},
                 success : function(data){
                     location.reload(true);

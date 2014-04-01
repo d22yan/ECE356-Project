@@ -42,12 +42,31 @@
         <sql:query dataSource="${connection}" var="patientProfile">
             <%=patientProfileQuery%>
         </sql:query>
+        <c:if test="${!empty param.patientId}">
+            <sql:query dataSource="${connection}" var="patientUsername">
+                SELECT username FROM user_account WHERE role_id = ${param.patientId} AND group_name = "patient";
+            </sql:query>
+        </c:if>
             
         <div class="container">
         <h3>Patient Information</h3></br>
         <div class="row">     
         <div class="col-md-12">
         <table class="table table-hover" >
+            <tr id="roleId">
+                <td class="col-md-5" >Role ID</td>
+                <td class="col-md-5" >${param.patientId != null ? param.patientId : user.roleId}</td>
+                <td class="col-md-2" ></td>
+            </tr>
+            <tr id="userName">
+                <td class="col-md-5" >Username</td>
+                <td class="col-md-5" >
+                <c:forEach var="row" items="${patientUsername.rows}">
+                    <c:out value="${row.username}"></c:out>
+                </c:forEach>
+                </td>
+                <td class="col-md-2" ></td>
+            </tr>
             <tr id="editName">
                 <td class="col-md-5" >Name</td>
                 <td class="col-md-5" >
@@ -194,15 +213,36 @@
                     <button type="button" id="nameButton" class="btn btn-primary btn-sm" onclick="updateSIN()">Save change</button>
                 </td>
             </tr>
-            <tr>
+            <tr id="editHealthStatus">
                 <td>Health Status:</td>
                 <td>
                     <c:forEach var="row" items="${patientProfile.rows}">
                         <c:out value="${row.current_health}"></c:out>
                     </c:forEach>
                 </td>
-                <td></td>
-            </tr> 
+                <td class="text-right">
+                    <c:if test="${user.groupName != 'patient'}">
+                        <p class="text-primary">Edit</p>
+                    </c:if>
+                </td>
+            </tr>
+            <c:if test="${user.groupName != 'patient'}">
+                 <tr class="edit-Health-status table-row bg-warning" style="display:none;">
+                    <td  class="col-md-5" >
+                        <form class="form-inline" role="form">
+                        <div class="form-group">       
+                            <label class="text-primary small" for="health-status">New Health Status</label> 
+                            <input type="text" class="form-control" id="health-status" name="health-status" placeholder="New Health Status">
+                        </div>
+                        </form>
+                    </td>
+                    <td class="col-md-5"> 
+                    </td>
+                    <td class="button-right col-md-2">
+                        <button type="button" id="nameButton" class="btn btn-primary btn-sm" onclick="updateHealthStatus()">Save change</button>
+                    </td>
+                </tr>
+            </c:if>
         </table>
         </div>
         </div>
@@ -253,8 +293,38 @@
             }
             $('.edit-SIN').animate({height: "toggle", opacity:"toggle" }, 'medium');
         }); 
+        $("#editHealthStatus").click(function(){
+            if(!$("#health-status").is(':visible')) {
+                $("#health-status").val('');               
+            }
+            $('.edit-Health-status').animate({height: "toggle", opacity:"toggle" }, 'medium');
+        }); 
 
     });
+    
+    function updateHealthStatus() {
+        if($('#health-status').val().length>0){
+            $('#health-status').parent().prev().css('color', 'black');
+            $('#health-status').css('border-color', '#ccc');
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/UserInfoUpdateServlet",
+                data: {type:<%=Database.UpdateQueries.PATIENT_UPDATE_HEALTHSTATUS%>,
+                        tableType:"<%=Database.UpdateQueries.PATIENT_TABLE_NAME%>",
+                        patientId:"<%=patientId%>",
+                        updateValue:$('#health-status').val()},
+                success : function(data){
+                    location.reload(true);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR+" - "+textStatus+" - "+errorThrown);
+                }  
+            });
+        } else {
+            $('#health-status').parent().prev().css('color', 'red');
+            $('#health-status').css('border-color', 'red');
+        }  
+    }
 
     function updatePassword() {
         if($('#password').val().length>0){

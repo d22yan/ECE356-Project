@@ -74,9 +74,12 @@
                 </div>
             </div>
             <div>
+            <c:if test="${user.groupName == 'staff'}">
             <a href="${pageContext.request.contextPath}/createAppointment.jsp" class="btn btn-danger" role="button">
                 Create Appointment
             </a>
+            </c:if>    
+
             </div>
         </form>
         <div class="table-responsive">
@@ -126,6 +129,7 @@
                     {
                         window.open('${pageContext.request.contextPath}/editAppointment.jsp?appointmentId=' + $(this).data('appointment-id') + '&' +
                                                                                                 'doctorId=' + $(this).data('doctor-id') + '&' +
+                                
                                                                                                 'patientId=' + $(this).data('patient-id') + '&' +
                                                                                                 'startTime=' + $(this).data('start-time') + '&' +
                                                                                                  'endTime=' + $(this).data('end-time'), '_blank');

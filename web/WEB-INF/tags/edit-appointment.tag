@@ -10,12 +10,8 @@
 <%@taglib tagdir="/WEB-INF/tags" prefix="edit-appointment" %>
 <%
     int staffId = 0;
-    int appointmentId = 0;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     Model.User user = null;
-    if (request.getParameter("appointmentId") != null) {
-        appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
-    }
     if (request.getSession().getAttribute("user") != null) {
         user = (Model.User) request.getSession().getAttribute("user");
         if (user.getGroupName().equals("staff")) {
