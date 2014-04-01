@@ -138,7 +138,7 @@
                 
                 clearSearchFilter();
 
-                $('#appointment-searchbar #search-range .input-group').datetimepicker();
+                $('#appointment-searchbar #search-range .input-group').datetimepicker({});
 
                 $('#appointment-searchbar #search-option').change(function() {
                     if ($(this).find(':selected').data('type') == 'string') {
