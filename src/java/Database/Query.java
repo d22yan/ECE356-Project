@@ -204,6 +204,42 @@ public class Query {
             "ORDER BY " +
                 "patient.patient_name; ";
     }
+    
+    public static String patientAppointmentList(int patientId) {
+        return
+            "SELECT " +
+                "appointment.appointment_id, " +
+                "appointment.doctor_id, " +
+                "appointment.patient_id, " +
+                "appointment.appointment_start_time, " +
+                "appointment.appointment_end_time, " +
+                "test.patient_name, " +
+                "test2.doctor_name " +
+            "FROM " +
+                "ece356db_d22yan.appointment " +
+            "RIGHT JOIN " + 
+                "( SELECT " +
+                    "* " +
+                "FROM " +
+                    "ece356db_d22yan.patient " +
+                "WHERE " +
+                    "patient.patient_id = " + patientId + ") " +
+            "AS " + 
+                "test " + 
+            "ON " +
+                "appointment.patient_id = test.patient_id " +
+            "LEFT JOIN " +
+                "( SELECT " +
+                    "* " +
+                "FROM " +
+                    "ece356db_d22yan.doctor ) " +
+            "AS " +
+                "test2 " +
+            "ON " +
+                "appointment.doctor_id = test2.doctor_id ";          
+    }
+    
+            
     public static String staffAppointmentList(int staffId) {
         return
             "SELECT " +

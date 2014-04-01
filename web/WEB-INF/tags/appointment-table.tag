@@ -12,11 +12,13 @@
     String defaultQuery = null;
     String doctorQuery = null;
     String staffQuery = null;
+    String patientQuery = null;
     String dataSourceUrl = Database.ServiceConstant.url + Database.ServiceConstant.database;
     if (request.getSession().getAttribute("user") != null) {
         Model.User user = (Model.User) request.getSession().getAttribute("user");
-        doctorQuery = Database.Query.doctorAppointmentList(user.getRoleId());
-        staffQuery = Database.Query.staffAppointmentList(user.getRoleId());
+        doctorQuery     = Database.Query.doctorAppointmentList(user.getRoleId());
+        staffQuery      = Database.Query.staffAppointmentList(user.getRoleId());
+        patientQuery    = Database.Query.patientAppointmentList(user.getRoleId());
 //        defaultQuery = Database.Query.staffappointmentList(user.getRoleId());
     }
 %>
@@ -43,6 +45,11 @@
             <c:when test='${user.getGroupName() == "doctor"}'>
                 <sql:query dataSource="${connection}" var="appointmentList">
                     <%=doctorQuery%>
+                </sql:query>
+            </c:when>
+            <c:when test='${user.getGroupName() == "patient"}'>
+                <sql:query dataSource="${connection}" var="appointmentList">
+                    <%=patientQuery%>
                 </sql:query>
             </c:when>
         </c:choose>
@@ -88,7 +95,9 @@
                 <tr>
                     <th>appointment id</th>
                     <th>doctor name</th>
-                    <th>patient name</th>
+                    <c:if test="${user.groupName != 'patient'}">
+                        <th>patient name</th>
+                    </c:if>
                     <th>start time</th>
                     <th>end time</th>
                     <c:if test="${user.groupName == 'staff'}">
@@ -107,12 +116,14 @@
                         <td class="appointment-id">
                             <c:out value="${row.appointment_id}"/>
                         </td>
-                    <td class="doctor-name">
+                         <td class="doctor-name">
                             <c:out value="${row.doctor_name}"/>
                         </td>
-                    <td class="patient-name">
-                            <c:out value="${row.patient_name}"/>
-                        </td>
+                        <c:if test="${user.groupName != 'patient'}">
+                            <td class="patient-name">
+                                <c:out value="${row.patient_name}"/>
+                            </td>
+                        </c:if>
                         <td class="start-time">
                             <c:out value="${row.appointment_start_time}"/>
                         </td>
